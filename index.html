@@ -20,624 +20,194 @@
     --muted: #6b7280;
     --muted2: #9ca3af;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Outfit', sans-serif;
-    font-weight: 400;
     min-height: 100vh;
     overflow-x: hidden;
   }
-
-  /* Background mesh */
   body::before {
     content: '';
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background:
       radial-gradient(ellipse 60% 40% at 10% 20%, rgba(0,229,160,0.04) 0%, transparent 60%),
       radial-gradient(ellipse 50% 40% at 90% 80%, rgba(91,143,255,0.04) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
+    pointer-events: none; z-index: 0;
   }
+  .wrapper { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 32px 60px; }
 
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 32px 60px;
-  }
-
-  /* HEADER */
   header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 36px 0 40px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 36px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 40px;
   }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
+  .header-left { display: flex; align-items: center; gap: 20px; }
   .logo-mark {
     width: 44px; height: 44px;
     background: linear-gradient(135deg, var(--accent), #00b87a);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    font-size: 18px;
-    color: #000;
-    letter-spacing: -1px;
-    flex-shrink: 0;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace; font-weight: 500; font-size: 18px;
+    color: #000; letter-spacing: -1px; flex-shrink: 0;
   }
-
-  .header-title h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: -0.3px;
-    color: var(--text);
-  }
-
-  .header-title p {
-    font-size: 13px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    margin-top: 2px;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
+  .header-title h1 { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; }
+  .header-title p { font-size: 13px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
   .data-source-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    font-size: 12px;
-    color: var(--muted2);
-    font-family: 'DM Mono', monospace;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border: 1px solid var(--border); border-radius: 100px;
+    font-size: 12px; color: var(--muted2); font-family: 'DM Mono', monospace;
   }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .last-updated { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-  .data-source-badge .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  .last-updated {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* SECTION LABEL */
   .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
   }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* KPI GRID */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
   .kpi-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    position: relative;
-    overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; position: relative; overflow: hidden;
     transition: border-color 0.3s, transform 0.3s;
     animation: fadeUp 0.5s both;
   }
-
-  .kpi-card:hover {
-    border-color: rgba(255,255,255,0.14);
-    transform: translateY(-2px);
-  }
-
+  .kpi-card:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-2px); }
   .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
     opacity: 0.6;
   }
+  .kpi-card:nth-child(1){--card-accent:var(--accent);animation-delay:.05s}
+  .kpi-card:nth-child(2){--card-accent:var(--accent3);animation-delay:.1s}
+  .kpi-card:nth-child(3){--card-accent:var(--accent2);animation-delay:.15s}
+  .kpi-card:nth-child(4){--card-accent:#d4a0ff;animation-delay:.2s}
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
-  .kpi-card:nth-child(1) { --card-accent: var(--accent); animation-delay: 0.05s; }
-  .kpi-card:nth-child(2) { --card-accent: var(--accent3); animation-delay: 0.1s; }
-  .kpi-card:nth-child(3) { --card-accent: var(--accent2); animation-delay: 0.15s; }
-  .kpi-card:nth-child(4) { --card-accent: #d4a0ff; animation-delay: 0.2s; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .kpi-label {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--muted);
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-  }
-
-  .kpi-value {
-    font-family: 'DM Serif Display', serif;
-    font-size: 38px;
-    color: var(--text);
-    line-height: 1;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
-  }
-
+  .kpi-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase; }
+  .kpi-value { font-family: 'DM Serif Display', serif; font-size: 38px; color: var(--text); line-height: 1; margin-bottom: 10px; letter-spacing: -1px; }
   .kpi-delta {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    padding: 3px 10px;
-    border-radius: 100px;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-family: 'DM Mono', monospace; padding: 3px 10px; border-radius: 100px;
   }
+  .kpi-delta.up { background: rgba(0,229,160,0.12); color: var(--accent); }
+  .kpi-delta.down { background: rgba(255,107,53,0.12); color: var(--accent2); }
+  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 8px; font-family: 'DM Mono', monospace; }
 
-  .kpi-delta.up {
-    background: rgba(0,229,160,0.12);
-    color: var(--accent);
-  }
-
-  .kpi-delta.down {
-    background: rgba(255,107,53,0.12);
-    color: var(--accent2);
-  }
-
-  .kpi-sub {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 8px;
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* CHART GRID */
-  .chart-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-  .chart-grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 40px;
-  }
+  .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 40px; }
 
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    animation: fadeUp 0.5s both;
-    transition: border-color 0.3s;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; animation: fadeUp 0.5s both; transition: border-color 0.3s;
   }
+  .card:hover { border-color: rgba(255,255,255,0.12); }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+  .card-title { font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: -0.2px; }
+  .card-subtitle { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); margin-top: 4px; }
 
-  .card:hover {
-    border-color: rgba(255,255,255,0.12);
-  }
-
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-
-  .card-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    letter-spacing: -0.2px;
-  }
-
-  .card-subtitle {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  .chart-container {
-    position: relative;
-  }
-
-  /* TABLE */
-  .table-wrapper {
-    overflow: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  thead th {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 0 0 14px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-
-  tbody tr {
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    transition: background 0.2s;
-  }
-
-  tbody tr:hover {
-    background: rgba(255,255,255,0.02);
-  }
-
-  tbody tr:last-child {
-    border-bottom: none;
-  }
-
-  tbody td {
-    padding: 12px 0;
-    font-size: 13px;
-    color: var(--text);
-  }
-
-  tbody td.mono {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-  }
-
-  /* POSITION BADGE */
-  .pos-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-  }
-
-  .pos-1 { background: rgba(0,229,160,0.15); color: var(--accent); }
-  .pos-2 { background: rgba(91,143,255,0.15); color: var(--accent3); }
-  .pos-3 { background: rgba(212,160,255,0.15); color: #d4a0ff; }
-  .pos-other { background: rgba(255,255,255,0.06); color: var(--muted2); }
-
-  /* DIFFICULTY BAR */
-  .diff-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .diff-track {
-    width: 60px;
-    height: 4px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 100px;
-    overflow: hidden;
-  }
-
-  .diff-fill {
-    height: 100%;
-    border-radius: 100px;
-    background: linear-gradient(90deg, var(--accent), var(--accent3));
-  }
-
-  /* AI VISIBILITY SECTION */
-  .ai-section {
-    margin-bottom: 40px;
-  }
-
-  .ai-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .ai-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    position: relative;
-    overflow: hidden;
-    animation: fadeUp 0.5s 0.3s both;
-  }
-
-  .ai-card::after {
-    content: '';
-    position: absolute;
-    bottom: -40px; right: -40px;
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,229,160,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .ai-score-display {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin: 20px 0;
-  }
-
-  .ai-score-ring {
-    position: relative;
-    width: 100px; height: 100px;
-    flex-shrink: 0;
-  }
-
-  .ai-score-ring svg {
-    transform: rotate(-90deg);
-  }
-
-  .ai-score-text {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: none;
-  }
-
-  .ai-score-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px;
-    line-height: 1;
-    color: var(--accent);
-  }
-
-  .ai-score-label {
-    font-size: 9px;
-    font-family: 'DM Mono', monospace;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  .ai-score-meta {
-    flex: 1;
-  }
-
-  .ai-stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-size: 13px;
-  }
-
-  .ai-stat-row:last-child { border-bottom: none; }
-
-  .ai-stat-key {
-    color: var(--muted2);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-  }
-
-  .ai-stat-val {
-    font-weight: 500;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-  }
-
-  .ai-stat-val.green { color: var(--accent); }
-  .ai-stat-val.blue { color: var(--accent3); }
-
-  /* SERP FEATURES LIST */
-  .serp-feature-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-
-  .serp-feature-row:last-child { border-bottom: none; }
-
-  .serp-feature-name {
-    font-size: 13px;
-    color: var(--text);
-  }
-
-  .serp-feature-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    padding: 2px 10px;
-    background: rgba(0,229,160,0.1);
-    border-radius: 100px;
-  }
-
-  /* TREND INDICATOR */
-  .trend-spark {
-    display: inline-flex;
-    gap: 2px;
-    align-items: flex-end;
-    height: 20px;
-    vertical-align: middle;
-  }
-
-  .trend-bar {
-    width: 3px;
-    border-radius: 1px;
-    background: var(--muted);
-    transition: height 0.3s;
-  }
-
-  /* FOOTER */
-  footer {
-    margin-top: 60px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  footer p {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .source-tags {
-    display: flex;
-    gap: 8px;
-  }
-
-  .source-tag {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    padding: 4px 12px;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    color: var(--muted);
-  }
-
-  /* TOOLTIP */
   .chip {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.06);
-    color: var(--muted2);
-    letter-spacing: 0.5px;
+    font-size: 10px; font-family: 'DM Mono', monospace; padding: 2px 8px;
+    border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--muted2); letter-spacing: 0.5px;
   }
-
   .chip.green { background: rgba(0,229,160,0.12); color: var(--accent); }
   .chip.blue { background: rgba(91,143,255,0.12); color: var(--accent3); }
   .chip.orange { background: rgba(255,107,53,0.12); color: var(--accent2); }
+  .chip.live { background: rgba(0,229,160,0.12); color: var(--accent); animation: pulse 2s infinite; }
 
-  .gsc-note {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 40px;
-    animation: fadeUp 0.5s 0.1s both;
-  }
-
-  .gsc-note-icon {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: rgba(91,143,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  .gsc-note-text {
-    flex: 1;
-  }
-
-  .gsc-note-text strong {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .gsc-note-text p {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .connect-btn {
-    background: var(--accent3);
-    color: #fff;
-    border: none;
-    padding: 8px 18px;
+  /* Loading state */
+  .loading-shimmer {
+    background: linear-gradient(90deg, var(--surface2) 25%, rgba(255,255,255,0.04) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
     border-radius: 8px;
-    font-size: 12px;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: opacity 0.2s;
+    height: 38px;
   }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-  .connect-btn:hover { opacity: 0.85; }
-
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 40px;
+  .gsc-status-bar {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 20px; margin-bottom: 40px;
+    animation: fadeUp 0.4s both;
   }
+  .gsc-status-icon { font-size: 20px; }
+  .gsc-status-text strong { font-size: 13px; font-weight: 500; display: block; margin-bottom: 2px; }
+  .gsc-status-text p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  #gscStatusBar.connected { border-color: rgba(0,229,160,0.3); }
+  #gscStatusBar.error { border-color: rgba(255,107,53,0.3); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+    padding: 0 0 14px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td { padding: 11px 0; font-size: 13px; color: var(--text); }
+  tbody td.mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+
+  .pos-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 8px;
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  }
+  .pos-1{background:rgba(0,229,160,0.15);color:var(--accent)}
+  .pos-2{background:rgba(91,143,255,0.15);color:var(--accent3)}
+  .pos-3{background:rgba(212,160,255,0.15);color:#d4a0ff}
+  .pos-other{background:rgba(255,255,255,0.06);color:var(--muted2)}
+
+  .ctr-bar { width: 60px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 100px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 6px; }
+  .ctr-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--accent3), var(--accent)); }
+
+  /* AI section */
+  .ai-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; position: relative; overflow: hidden; animation: fadeUp 0.5s 0.3s both;
+  }
+  .ai-score-ring { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+  .ai-score-ring svg { transform: rotate(-90deg); }
+  .ai-score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+  .ai-score-num { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; color: var(--accent); }
+  .ai-score-label { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .ai-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+  .ai-stat-row:last-child { border-bottom: none; }
+  .ai-stat-key { color: var(--muted2); font-family: 'DM Mono', monospace; font-size: 11px; }
+  .ai-stat-val { font-weight: 500; font-family: 'DM Mono', monospace; font-size: 13px; }
+  .ai-stat-val.green { color: var(--accent); }
+  .ai-stat-val.blue { color: var(--accent3); }
+
+  /* Device pills */
+  .device-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .device-label { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--muted2); width: 80px; text-transform: capitalize; }
+  .device-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
+  .device-fill { height: 100%; border-radius: 100px; }
+  .device-val { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text); width: 40px; text-align: right; }
+
+  footer {
+    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .source-tags { display: flex; gap: 8px; }
+  .source-tag { font-size: 11px; font-family: 'DM Mono', monospace; padding: 4px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--muted); }
+
+  .trend-spark { display: inline-flex; gap: 2px; align-items: flex-end; height: 20px; vertical-align: middle; }
+  .trend-bar { width: 3px; border-radius: 1px; }
 </style>
 </head>
 <body>
 <div class="wrapper">
 
-  <!-- HEADER -->
   <header>
     <div class="header-left">
       <div class="logo-mark">SS</div>
@@ -647,26 +217,92 @@
       </div>
     </div>
     <div class="header-right">
-      <div class="data-source-badge">
-        <span class="dot"></span>
-        Live · Semrush API
-      </div>
-      <div class="last-updated">Updated Mar 2026</div>
+      <div class="data-source-badge"><span class="dot"></span>Live · GSC + Semrush</div>
+      <div class="last-updated" id="lastUpdated">Fetching data…</div>
     </div>
   </header>
 
-  <!-- GSC CONNECT NOTICE -->
-  <div class="gsc-note">
-    <div class="gsc-note-icon">🔗</div>
-    <div class="gsc-note-text">
-      <strong>Connect Google Search Console for live Impressions, CTR & Query data</strong>
-      <p>This dashboard is pre-built. Once connected, all GSC charts will populate with real-time data from salesscreen.com</p>
+  <!-- GSC STATUS BAR -->
+  <div class="gsc-status-bar" id="gscStatusBar">
+    <div class="gsc-status-icon" id="gscStatusIcon">⏳</div>
+    <div class="gsc-status-text">
+      <strong id="gscStatusTitle">Connecting to Google Search Console…</strong>
+      <p id="gscStatusMsg">Fetching live data from your GSC API endpoint</p>
     </div>
-    <button class="connect-btn">Connect GSC →</button>
+    <span class="chip" id="gscStatusChip">Loading</span>
   </div>
 
-  <!-- KPI ROW -->
-  <div class="section-label">Organic Performance Overview</div>
+  <!-- GSC KPIs -->
+  <div class="section-label">Google Search Console · Last 90 Days</div>
+  <div class="kpi-grid" id="gscKpiGrid">
+    <div class="kpi-card"><div class="kpi-label">Total Clicks</div><div class="loading-shimmer" id="kpi-clicks"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Impressions</div><div class="loading-shimmer" id="kpi-impressions"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Avg. CTR</div><div class="loading-shimmer" id="kpi-ctr"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Avg. Position</div><div class="loading-shimmer" id="kpi-position"></div></div>
+  </div>
+
+  <!-- TIME SERIES -->
+  <div class="chart-grid" style="margin-bottom:40px; animation: fadeUp 0.5s 0.2s both;">
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Clicks & Impressions Over Time</div><div class="card-subtitle">Daily · Last 90 days · Google Search Console</div></div>
+        <span class="chip live">GSC Live</span>
+      </div>
+      <div style="height:220px;"><canvas id="timeSeriesChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">CTR Trend</div><div class="card-subtitle">Click-through rate over time</div></div>
+        <span class="chip live">GSC Live</span>
+      </div>
+      <div style="height:220px;"><canvas id="ctrChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- QUERIES + PAGES -->
+  <div class="grid-2">
+    <div class="card" style="animation-delay:0.25s">
+      <div class="card-header">
+        <div><div class="card-title">Top Queries</div><div class="card-subtitle">By clicks · Last 90 days</div></div>
+        <span class="chip live">GSC Live</span>
+      </div>
+      <table>
+        <thead><tr><th>Query</th><th>Clicks</th><th>CTR</th><th>Pos.</th></tr></thead>
+        <tbody id="queriesTable"><tr><td colspan="4"><div class="loading-shimmer" style="margin:8px 0"></div></td></tr></tbody>
+      </table>
+    </div>
+    <div class="card" style="animation-delay:0.3s">
+      <div class="card-header">
+        <div><div class="card-title">Top Pages</div><div class="card-subtitle">By clicks · Last 90 days</div></div>
+        <span class="chip live">GSC Live</span>
+      </div>
+      <table>
+        <thead><tr><th>Page</th><th>Clicks</th><th>Impr.</th><th>CTR</th></tr></thead>
+        <tbody id="pagesTable"><tr><td colspan="4"><div class="loading-shimmer" style="margin:8px 0"></div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DEVICES + COUNTRIES -->
+  <div class="grid-2" style="margin-top: -24px;">
+    <div class="card" style="animation-delay:0.35s">
+      <div class="card-header">
+        <div><div class="card-title">Clicks by Device</div><div class="card-subtitle">Desktop vs Mobile vs Tablet</div></div>
+        <span class="chip live">GSC Live</span>
+      </div>
+      <div id="devicesChart" style="padding-top:8px;"></div>
+    </div>
+    <div class="card" style="animation-delay:0.4s">
+      <div class="card-header">
+        <div><div class="card-title">Top Countries</div><div class="card-subtitle">By impressions</div></div>
+        <span class="chip live">GSC Live</span>
+      </div>
+      <div style="height:180px;"><canvas id="countriesChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- SEMRUSH SECTION -->
+  <div class="section-label" style="margin-top:40px;">Semrush Organic Intelligence</div>
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-label">Organic Keywords</div>
@@ -678,7 +314,7 @@
       <div class="kpi-label">Est. Monthly Traffic</div>
       <div class="kpi-value">2,276</div>
       <span class="kpi-delta down">↓ 16% MoM</span>
-      <div class="kpi-sub">from Semrush estimates</div>
+      <div class="kpi-sub">Semrush estimate</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Traffic Cost Value</div>
@@ -694,361 +330,319 @@
     </div>
   </div>
 
-  <!-- TRAFFIC TREND + KWs -->
-  <div class="chart-grid" style="margin-bottom:16px; animation: fadeUp 0.5s 0.25s both;">
+  <!-- SEMRUSH CHARTS -->
+  <div class="chart-grid" style="margin-bottom:40px; animation: fadeUp 0.5s 0.45s both;">
     <div class="card">
       <div class="card-header">
-        <div>
-          <div class="card-title">Organic Traffic Trend</div>
-          <div class="card-subtitle">Monthly estimated visits · Last 12 months</div>
-        </div>
+        <div><div class="card-title">Organic Traffic Trend</div><div class="card-subtitle">Monthly estimated visits · Last 12 months</div></div>
         <span class="chip green">Semrush</span>
       </div>
-      <div class="chart-container" style="height:220px;">
-        <canvas id="trafficChart"></canvas>
-      </div>
+      <div style="height:220px;"><canvas id="semrushTrafficChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-header">
-        <div>
-          <div class="card-title">Keyword Growth</div>
-          <div class="card-subtitle">Total ranking keywords over time</div>
-        </div>
+        <div><div class="card-title">Keyword Growth</div><div class="card-subtitle">Total ranking keywords over time</div></div>
         <span class="chip blue">Semrush</span>
       </div>
-      <div class="chart-container" style="height:220px;">
-        <canvas id="kwChart"></canvas>
-      </div>
+      <div style="height:220px;"><canvas id="semrushKwChart"></canvas></div>
     </div>
   </div>
 
-  <!-- GOOGLE SEARCH CONSOLE PLACEHOLDER ROW -->
-  <div class="section-label" style="margin-top: 32px;">Google Search Console · Awaiting Connection</div>
-  <div class="grid-2" style="animation: fadeUp 0.5s 0.3s both;">
-    <div class="card" style="opacity:0.6;">
-      <div class="card-header">
-        <div>
-          <div class="card-title">Impressions & Clicks</div>
-          <div class="card-subtitle">From Google Search Console</div>
-        </div>
-        <span class="chip">Connect GSC</span>
-      </div>
-      <div style="height:200px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
-        <div style="font-size:32px;">📊</div>
-        <p style="font-size:13px; color:var(--muted); font-family:'DM Mono',monospace; text-align:center;">Connect Google Search Console<br>to unlock Impressions, CTR & Clicks</p>
-      </div>
-    </div>
-    <div class="card" style="opacity:0.6;">
-      <div class="card-header">
-        <div>
-          <div class="card-title">Top Queries by CTR</div>
-          <div class="card-subtitle">From Google Search Console</div>
-        </div>
-        <span class="chip">Connect GSC</span>
-      </div>
-      <div style="height:200px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
-        <div style="font-size:32px;">🔍</div>
-        <p style="font-size:13px; color:var(--muted); font-family:'DM Mono',monospace; text-align:center;">Real query data, average position<br>& CTR will appear here</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- AI VISIBILITY SECTION -->
+  <!-- AI VISIBILITY -->
   <div class="section-label">AI & SERP Feature Visibility</div>
-  <div class="ai-section">
-    <div class="ai-grid">
-      <div class="ai-card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">AI Overview & SERP Feature Presence</div>
-            <div class="card-subtitle">Keywords appearing in SERP features · Semrush data</div>
-          </div>
-          <span class="chip green">Live</span>
+  <div class="grid-2" style="margin-bottom:40px;">
+    <div class="ai-card">
+      <div class="card-header">
+        <div><div class="card-title">SERP Feature Presence</div><div class="card-subtitle">Keywords in SERP features · Semrush</div></div>
+        <span class="chip green">Live</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:32px;margin:20px 0;">
+        <div class="ai-score-ring">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#sg)" stroke-width="8"
+              stroke-dasharray="263.9" stroke-dashoffset="66" stroke-linecap="round"/>
+            <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00e5a0"/><stop offset="100%" stop-color="#5b8fff"/>
+            </linearGradient></defs>
+          </svg>
+          <div class="ai-score-text"><div class="ai-score-num">75%</div><div class="ai-score-label">visible</div></div>
         </div>
-        <div class="ai-score-display">
-          <div class="ai-score-ring">
-            <svg width="100" height="100" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
-              <circle cx="50" cy="50" r="42" fill="none" stroke="url(#scoreGrad)" stroke-width="8"
-                stroke-dasharray="263.9" stroke-dashoffset="66" stroke-linecap="round"/>
-              <defs>
-                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#00e5a0"/>
-                  <stop offset="100%" stop-color="#5b8fff"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <div class="ai-score-text">
-              <div class="ai-score-num">75%</div>
-              <div class="ai-score-label">visible</div>
-            </div>
-          </div>
-          <div class="ai-score-meta">
-            <div class="ai-stat-row">
-              <span class="ai-stat-key">SERP Feature KWs</span>
-              <span class="ai-stat-val green">20</span>
-            </div>
-            <div class="ai-stat-row">
-              <span class="ai-stat-key">Top Positions (P1)</span>
-              <span class="ai-stat-val green">19 / 20</span>
-            </div>
-            <div class="ai-stat-row">
-              <span class="ai-stat-key">Avg. Search Volume</span>
-              <span class="ai-stat-val blue">449</span>
-            </div>
-            <div class="ai-stat-row">
-              <span class="ai-stat-key">Feature Traffic Est.</span>
-              <span class="ai-stat-val green">~38%</span>
-            </div>
-          </div>
-        </div>
-        <div class="card-title" style="font-size:12px; color:var(--muted); margin-bottom: 12px; font-family:'DM Mono',monospace;">TOP SERP FEATURE KEYWORDS</div>
-        <div>
-          <div class="serp-feature-row">
-            <span class="serp-feature-name">how to motivate a sales team</span>
-            <span class="serp-feature-count">1,300 vol</span>
-          </div>
-          <div class="serp-feature-row">
-            <span class="serp-feature-name">funny work gif / work gifs</span>
-            <span class="serp-feature-count">1,000+ vol</span>
-          </div>
-          <div class="serp-feature-row">
-            <span class="serp-feature-name">sales gamification</span>
-            <span class="serp-feature-count">260 vol</span>
-          </div>
-          <div class="serp-feature-row">
-            <span class="serp-feature-name">sales leaderboard software</span>
-            <span class="serp-feature-count">260 vol</span>
-          </div>
-          <div class="serp-feature-row">
-            <span class="serp-feature-name">it worker gif / workplace gif</span>
-            <span class="serp-feature-count">320 vol</span>
-          </div>
+        <div style="flex:1;">
+          <div class="ai-stat-row"><span class="ai-stat-key">SERP Feature KWs</span><span class="ai-stat-val green">20</span></div>
+          <div class="ai-stat-row"><span class="ai-stat-key">Top Positions (P1)</span><span class="ai-stat-val green">19 / 20</span></div>
+          <div class="ai-stat-row"><span class="ai-stat-key">Avg. Search Volume</span><span class="ai-stat-val blue">449</span></div>
+          <div class="ai-stat-row"><span class="ai-stat-key">Feature Traffic Est.</span><span class="ai-stat-val green">~38%</span></div>
         </div>
       </div>
-
-      <div class="ai-card" style="animation-delay: 0.4s;">
-        <div class="card-header">
-          <div>
-            <div class="card-title">AI Visibility Tracker</div>
-            <div class="card-subtitle">Brand mentions in AI answers · via Semrush AI</div>
+    </div>
+    <div class="ai-card" style="animation-delay:0.5s;">
+      <div class="card-header">
+        <div><div class="card-title">AI Visibility Tracker</div><div class="card-subtitle">Brand mentions in AI answers · Semrush AI</div></div>
+        <span class="chip orange">Beta</span>
+      </div>
+      <div style="margin:16px 0;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🤖</div>
+            <div><div style="font-size:13px;font-weight:500;">ChatGPT</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">gpt-4o</div></div>
           </div>
-          <span class="chip orange">Beta</span>
+          <span class="chip">Track →</span>
         </div>
-
-        <div style="margin: 20px 0;">
-          <div style="font-size:12px; font-family:'DM Mono',monospace; color:var(--muted); margin-bottom:16px; text-transform:uppercase; letter-spacing:1px;">Tracked AI Platforms</div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🤖</div>
-                <div>
-                  <div style="font-size:13px;font-weight:500;">ChatGPT</div>
-                  <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);">gpt-4o</div>
-                </div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;">Track →</div>
-              </div>
-            </div>
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">✨</div>
-                <div>
-                  <div style="font-size:13px;font-weight:500;">Gemini</div>
-                  <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);">google.com</div>
-                </div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;">Track →</div>
-              </div>
-            </div>
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🔍</div>
-                <div>
-                  <div style="font-size:13px;font-weight:500;">Perplexity</div>
-                  <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);">perplexity.ai</div>
-                </div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;">Track →</div>
-              </div>
-            </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">✨</div>
+            <div><div style="font-size:13px;font-weight:500;">Gemini</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">google.com</div></div>
           </div>
+          <span class="chip">Track →</span>
         </div>
-
-        <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px; margin-top: 8px;">
-          <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">Recommended Tracking Queries</div>
-          <div style="display:flex; flex-wrap:wrap; gap:6px;">
-            <span class="chip">"sales gamification software"</span>
-            <span class="chip">"sales leaderboard tools"</span>
-            <span class="chip">"how to motivate sales team"</span>
-            <span class="chip">"best sales performance software"</span>
-            <span class="chip">"sales contest software"</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🔍</div>
+            <div><div style="font-size:13px;font-weight:500;">Perplexity</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">perplexity.ai</div></div>
           </div>
+          <span class="chip">Track →</span>
+        </div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+        <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Recommended Queries</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="chip">"sales gamification software"</span>
+          <span class="chip">"sales leaderboard tools"</span>
+          <span class="chip">"how to motivate sales team"</span>
+          <span class="chip">"best sales performance software"</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TOP KEYWORDS TABLE -->
-  <div class="section-label">Top Organic Keywords</div>
-  <div class="card" style="animation: fadeUp 0.5s 0.4s both; margin-bottom: 40px;">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Ranking Keywords by Traffic Share</div>
-        <div class="card-subtitle">Top 10 keywords · US database · March 2026</div>
-      </div>
-      <span class="chip green">Semrush Live</span>
-    </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Keyword</th>
-            <th>Position</th>
-            <th>Search Vol.</th>
-            <th>Traffic %</th>
-            <th>Difficulty</th>
-            <th>Trend</th>
-          </tr>
-        </thead>
-        <tbody id="keywordTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
   <footer>
-    <p>salesscreen.com · SEO Dashboard · Generated with Claude + Semrush API</p>
+    <p>salesscreen.com · SEO Dashboard · Claude + Semrush + Google Search Console</p>
     <div class="source-tags">
       <span class="source-tag">Semrush API</span>
-      <span class="source-tag">Google Search Console</span>
+      <span class="source-tag">GSC Live</span>
       <span class="source-tag">Semrush AI Toolkit</span>
     </div>
   </footer>
-
 </div>
 
 <script>
-  // DATA from Semrush API
-  const trafficData = {
-    labels: ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'],
-    traffic: [2288,2731,2577,3030,3762,2133,2574,2165,1916,2674,2711,2425],
-    keywords: [1128,1021,860,911,627,675,721,731,2121,2211,1107,1489]
-  };
+// ============================================================
+// ⚙️  CONFIGURATION — paste your Apps Script URL here
+// ============================================================
+const GSC_API_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+// ============================================================
 
-  const keywords = [
-    { kw: 'salesscreen', pos: 1, vol: 590, tr: 20.73, kd: 45, trend: [0.36,0.45,0.45,0.55,0.45,0.45,0.36,0.30,0.45,0.55,0.55,0.67] },
-    { kw: 'sales screen', pos: 1, vol: 140, tr: 4.92, kd: 50, trend: [0.08,0.08,0.23,0.11,0.18,0.08,0.54,0.28,0.08,0.08,0.66,0.54] },
-    { kw: 'salesscreen login', pos: 1, vol: 110, tr: 3.86, kd: 10, trend: [0.34,0.81,0.34,0.43,0.43,0.28,0.21,0.34,0.34,0.28,0.21,0.15] },
-    { kw: 'sales gamification', pos: 1, vol: 260, tr: 2.81, kd: 19, trend: [0.66,0.66,0.53,0.53,0.53,0.66,0.82,0.66,1.00,1.00,0.43,1.00] },
-    { kw: 'sales gamification software', pos: 2, vol: 390, tr: 2.24, kd: 11, trend: [0.23,0.29,0.29,0.36,0.36,0.44,0.44,0.81,0.81,0.66,1.00,1.00] },
-    { kw: 'sales leaderboard software', pos: 4, vol: 260, tr: 0.70, kd: 14, trend: [0.11,0.18,0.23,0.35,0.35,0.44,0.35,0.66,0.66,0.35,0.66,1.00] },
-    { kw: 'sales gamification tools', pos: 2, vol: 110, tr: 0.61, kd: 16, trend: [0.15,0.15,0.07,0.15,0.42,0.42,0.07,0.80,0.65,0.80,1.00,1.00] },
-    { kw: 'gamify sales', pos: 2, vol: 170, tr: 0.57, kd: 16, trend: [1.00,0.53,1.00,0.53,0.53,1.00,0.65,0.65,0.21,0.21,0.21,0.15] },
-    { kw: 'gamified sales training', pos: 1, vol: 70, tr: 0.74, kd: 9, trend: [0.09,0.14,0.52,0.52,0.52,0.14,0.09,0.33,0.42,0.52,0.42,0.42] },
-    { kw: 'salescreen', pos: 1, vol: 110, tr: 3.86, kd: 31, trend: [0.82,0.12,0.17,0.17,0.23,0.12,0.17,0.17,0.28,0.23,1.00,0.28] },
-  ];
+Chart.defaults.color = '#6b7280';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+const grid = 'rgba(255,255,255,0.04)';
 
-  // Build keyword table
-  const tbody = document.getElementById('keywordTableBody');
-  keywords.forEach(k => {
-    const maxTrend = Math.max(...k.trend);
-    const trendBars = k.trend.slice(-6).map(v => {
-      const h = Math.max(4, Math.round((v / maxTrend) * 18));
-      return `<div class="trend-bar" style="height:${h}px;background:${v > 0.6 ? 'var(--accent)' : 'rgba(255,255,255,0.2)'}"></div>`;
-    }).join('');
+// ── Semrush static data ──────────────────────────────────────
+const semrushData = {
+  labels:   ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'],
+  traffic:  [2288,2731,2577,3030,3762,2133,2574,2165,1916,2674,2711,2425],
+  keywords: [1128,1021,860,911,627,675,721,731,2121,2211,1107,1489]
+};
 
-    const posClass = k.pos === 1 ? 'pos-1' : k.pos === 2 ? 'pos-2' : k.pos === 3 ? 'pos-3' : 'pos-other';
-    const kdColor = k.kd < 20 ? 'var(--accent)' : k.kd < 40 ? 'var(--accent3)' : 'var(--accent2)';
+function makeGrad(ctx, h, c1, c2) {
+  const g = ctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0, c1); g.addColorStop(1, c2); return g;
+}
 
-    tbody.innerHTML += `
-      <tr>
-        <td style="font-weight:500; max-width:220px;">${k.kw}</td>
-        <td><span class="pos-badge ${posClass}">${k.pos}</span></td>
-        <td class="mono">${k.vol.toLocaleString()}</td>
-        <td class="mono" style="color:var(--accent)">${k.tr.toFixed(2)}%</td>
-        <td>
-          <div class="diff-bar">
-            <div class="diff-track"><div class="diff-fill" style="width:${k.kd}%;background:${kdColor}"></div></div>
-            <span class="mono" style="color:${kdColor}">${k.kd}</span>
-          </div>
-        </td>
-        <td><div class="trend-spark">${trendBars}</div></td>
-      </tr>
-    `;
-  });
+// Semrush traffic chart
+(function(){
+  const ctx = document.getElementById('semrushTrafficChart').getContext('2d');
+  new Chart(ctx, { type:'line', data:{ labels:semrushData.labels, datasets:[{
+    data:semrushData.traffic, borderColor:'#00e5a0', borderWidth:2,
+    backgroundColor:makeGrad(ctx,220,'rgba(0,229,160,0.25)','rgba(0,229,160,0.01)'),
+    fill:true, tension:0.4, pointRadius:3, pointBackgroundColor:'#00e5a0',
+    pointBorderColor:'#0a0c10', pointBorderWidth:2
+  }]}, options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
+    scales:{x:{grid:{color:grid}},y:{grid:{color:grid}}}}});
+})();
 
-  // Chart defaults
-  Chart.defaults.color = '#6b7280';
-  Chart.defaults.font.family = "'DM Mono', monospace";
-  Chart.defaults.font.size = 11;
+// Semrush keyword chart
+(function(){
+  const ctx = document.getElementById('semrushKwChart').getContext('2d');
+  new Chart(ctx, { type:'bar', data:{ labels:semrushData.labels, datasets:[{
+    data:semrushData.keywords,
+    backgroundColor:semrushData.keywords.map((_,i)=>i===11?'#5b8fff':'rgba(91,143,255,0.3)'),
+    borderRadius:4, borderSkipped:false
+  }]}, options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
+    scales:{x:{grid:{color:grid}},y:{grid:{color:grid}}}}});
+})();
 
-  const gridColor = 'rgba(255,255,255,0.04)';
+// ── GSC Live data ────────────────────────────────────────────
+let timeSeriesChart = null;
+let ctrChartInst    = null;
+let countriesChart  = null;
 
-  // Traffic Chart
-  const trafficCtx = document.getElementById('trafficChart').getContext('2d');
-  const trafficGrad = trafficCtx.createLinearGradient(0, 0, 0, 220);
-  trafficGrad.addColorStop(0, 'rgba(0,229,160,0.25)');
-  trafficGrad.addColorStop(1, 'rgba(0,229,160,0.01)');
+function setStatus(state, title, msg) {
+  const bar   = document.getElementById('gscStatusBar');
+  const icon  = document.getElementById('gscStatusIcon');
+  const t     = document.getElementById('gscStatusTitle');
+  const m     = document.getElementById('gscStatusMsg');
+  const chip  = document.getElementById('gscStatusChip');
+  bar.className = 'gsc-status-bar ' + state;
+  icon.textContent  = state==='connected' ? '✅' : state==='error' ? '❌' : '⏳';
+  t.textContent     = title;
+  m.textContent     = msg;
+  chip.textContent  = state==='connected' ? 'Live' : state==='error' ? 'Error' : 'Loading';
+  chip.className    = 'chip ' + (state==='connected'?'green':state==='error'?'orange':'');
+}
 
-  new Chart(trafficCtx, {
-    type: 'line',
-    data: {
-      labels: trafficData.labels,
-      datasets: [{
-        data: trafficData.traffic,
-        borderColor: '#00e5a0',
-        borderWidth: 2,
-        backgroundColor: trafficGrad,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 3,
-        pointBackgroundColor: '#00e5a0',
-        pointBorderColor: '#0a0c10',
-        pointBorderWidth: 2,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#181c24', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#f0f2f7', bodyColor: '#9ca3af', padding: 10 } },
-      scales: {
-        x: { grid: { color: gridColor }, ticks: { color: '#6b7280' } },
-        y: { grid: { color: gridColor }, ticks: { color: '#6b7280' } }
-      }
-    }
-  });
+function fmt(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000)    return (n/1000).toFixed(1)+'K';
+  return n.toLocaleString();
+}
 
-  // Keywords Chart
-  const kwCtx = document.getElementById('kwChart').getContext('2d');
-  const kwGrad = kwCtx.createLinearGradient(0, 0, 0, 220);
-  kwGrad.addColorStop(0, 'rgba(91,143,255,0.25)');
-  kwGrad.addColorStop(1, 'rgba(91,143,255,0.01)');
+function renderKPI(id, value, delta, sub) {
+  const el = document.getElementById(id);
+  el.outerHTML = `<div class="kpi-value">${value}</div>
+    <span class="kpi-delta ${delta.startsWith('↑')?'up':'down'}">${delta}</span>
+    <div class="kpi-sub">${sub}</div>`;
+}
 
-  new Chart(kwCtx, {
-    type: 'bar',
-    data: {
-      labels: trafficData.labels,
-      datasets: [{
-        data: trafficData.keywords,
-        backgroundColor: trafficData.keywords.map((v,i) => i === 11 ? '#5b8fff' : 'rgba(91,143,255,0.3)'),
-        borderRadius: 4,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#181c24', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#f0f2f7', bodyColor: '#9ca3af', padding: 10 } },
-      scales: {
-        x: { grid: { color: gridColor }, ticks: { color: '#6b7280' } },
-        y: { grid: { color: gridColor }, ticks: { color: '#6b7280' } }
-      }
-    }
-  });
+function renderTimeSeries(rows) {
+  // Group by week to reduce noise
+  const labels = rows.filter((_,i)=>i%7===0).map(r=>r.date.slice(5));
+  const clicks  = rows.filter((_,i)=>i%7===0).map(r=>r.clicks);
+  const impr    = rows.filter((_,i)=>i%7===0).map(r=>r.impressions);
+
+  const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+  if (timeSeriesChart) timeSeriesChart.destroy();
+  timeSeriesChart = new Chart(ctx, { type:'line', data:{ labels, datasets:[
+    { label:'Clicks', data:clicks, borderColor:'#00e5a0', borderWidth:2,
+      backgroundColor:'rgba(0,229,160,0.1)', fill:true, tension:0.4,
+      pointRadius:0, yAxisID:'y' },
+    { label:'Impressions', data:impr, borderColor:'#5b8fff', borderWidth:2,
+      backgroundColor:'rgba(91,143,255,0.05)', fill:true, tension:0.4,
+      pointRadius:0, yAxisID:'y1' }
+  ]}, options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:true, labels:{ color:'#9ca3af', boxWidth:12, padding:16 }},
+      tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
+    scales:{
+      x:{ grid:{color:grid} },
+      y:{ grid:{color:grid}, position:'left' },
+      y1:{ grid:{display:false}, position:'right' }
+    }}});
+}
+
+function renderCTR(rows) {
+  const labels = rows.filter((_,i)=>i%7===0).map(r=>r.date.slice(5));
+  const ctr    = rows.filter((_,i)=>i%7===0).map(r=>r.ctr);
+  const ctx    = document.getElementById('ctrChart').getContext('2d');
+  if (ctrChartInst) ctrChartInst.destroy();
+  const grad = ctx.createLinearGradient(0,0,0,220);
+  grad.addColorStop(0,'rgba(255,107,53,0.2)'); grad.addColorStop(1,'rgba(255,107,53,0.01)');
+  ctrChartInst = new Chart(ctx, { type:'line', data:{ labels, datasets:[{
+    label:'CTR %', data:ctr, borderColor:'#ff6b35', borderWidth:2,
+    backgroundColor:grad, fill:true, tension:0.4, pointRadius:0
+  }]}, options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,callbacks:{label:v=>v.raw+'%'}}},
+    scales:{ x:{grid:{color:grid}}, y:{grid:{color:grid},ticks:{callback:v=>v+'%'}}}}});
+}
+
+function renderQueries(rows) {
+  const tb = document.getElementById('queriesTable');
+  tb.innerHTML = rows.slice(0,8).map(r => {
+    const pos = Math.round(r.position);
+    const pc = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
+    return `<tr>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.query}</td>
+      <td class="mono" style="color:var(--accent)">${r.clicks}</td>
+      <td class="mono">
+        <div class="ctr-bar"><div class="ctr-fill" style="width:${Math.min(r.ctr*5,100)}%"></div></div>
+        ${r.ctr}%
+      </td>
+      <td><span class="pos-badge ${pc}">${pos}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPages(rows) {
+  const tb = document.getElementById('pagesTable');
+  tb.innerHTML = rows.slice(0,8).map(r => `<tr>
+    <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2)">${r.page}</td>
+    <td class="mono" style="color:var(--accent)">${r.clicks}</td>
+    <td class="mono">${fmt(r.impressions)}</td>
+    <td class="mono">${r.ctr}%</td>
+  </tr>`).join('');
+}
+
+function renderDevices(rows) {
+  const total  = rows.reduce((s,r)=>s+r.clicks,0)||1;
+  const colors = { desktop:'#5b8fff', mobile:'#00e5a0', tablet:'#ff6b35' };
+  document.getElementById('devicesChart').innerHTML = rows.map(r => `
+    <div class="device-row">
+      <span class="device-label">${r.device}</span>
+      <div class="device-track"><div class="device-fill" style="width:${(r.clicks/total*100).toFixed(0)}%;background:${colors[r.device.toLowerCase()]||'#9ca3af'}"></div></div>
+      <span class="device-val">${(r.clicks/total*100).toFixed(0)}%</span>
+    </div>`).join('');
+}
+
+function renderCountries(rows) {
+  const ctx = document.getElementById('countriesChart').getContext('2d');
+  if (countriesChart) countriesChart.destroy();
+  countriesChart = new Chart(ctx, { type:'doughnut',
+    data:{ labels:rows.map(r=>r.country), datasets:[{
+      data:rows.map(r=>r.impressions),
+      backgroundColor:['#00e5a0','#5b8fff','#ff6b35','#d4a0ff','#fbbf24'],
+      borderWidth:0, hoverOffset:4
+    }]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{ legend:{ position:'right', labels:{ color:'#9ca3af', boxWidth:10, padding:12 }},
+        tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}}}});
+}
+
+// ── Fetch GSC data ───────────────────────────────────────────
+async function loadGSC() {
+  if (!GSC_API_URL || GSC_API_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+    setStatus('error',
+      'Apps Script URL not configured',
+      'Open index.html and paste your Web App URL into GSC_API_URL at the top of the script');
+    return;
+  }
+
+  try {
+    setStatus('', 'Connecting to Google Search Console…', 'Fetching live data from your GSC API endpoint');
+    const res  = await fetch(GSC_API_URL);
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error);
+
+    // Update last updated
+    document.getElementById('lastUpdated').textContent =
+      'Updated ' + new Date(data.lastUpdated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+    // Status
+    setStatus('connected', 'Google Search Console connected', 'Showing live data for salesscreen.com · Last 90 days');
+
+    // KPIs
+    const s = data.summary;
+    document.getElementById('kpi-clicks').outerHTML      = `<div class="kpi-value">${fmt(s.clicks)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">last 90 days</div>`;
+    document.getElementById('kpi-impressions').outerHTML = `<div class="kpi-value">${fmt(s.impressions)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">search impressions</div>`;
+    document.getElementById('kpi-ctr').outerHTML         = `<div class="kpi-value">${s.ctr}%</div><span class="kpi-delta ${s.ctr>2?'up':'down'}">${s.ctr>2?'↑':'↓'} avg CTR</span><div class="kpi-sub">click-through rate</div>`;
+    document.getElementById('kpi-position').outerHTML    = `<div class="kpi-value">${s.position}</div><span class="kpi-delta ${s.position<20?'up':'down'}">${s.position<20?'↑':'↓'} avg pos</span><div class="kpi-sub">average position</div>`;
+
+    // Charts & tables
+    if (data.timeSeries?.length)  renderTimeSeries(data.timeSeries);
+    if (data.timeSeries?.length)  renderCTR(data.timeSeries);
+    if (data.queries?.length)     renderQueries(data.queries);
+    if (data.pages?.length)       renderPages(data.pages);
+    if (data.devices?.length)     renderDevices(data.devices);
+    if (data.countries?.length)   renderCountries(data.countries);
+
+  } catch(e) {
+    setStatus('error', 'Could not load GSC data', e.message);
+  }
+}
+
+loadGSC();
 </script>
 </body>
 </html>
