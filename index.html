@@ -192,10 +192,10 @@
   <!-- GSC KPIs -->
   <div class="section-label">Google Search Console · <span id="rangeLabel">Last 90 Days</span></div>
   <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">Total Clicks</div><div class="loading-shimmer" id="kpi-clicks"></div></div>
-    <div class="kpi-card"><div class="kpi-label">Impressions</div><div class="loading-shimmer" id="kpi-impressions"></div></div>
-    <div class="kpi-card"><div class="kpi-label">Avg. CTR</div><div class="loading-shimmer" id="kpi-ctr"></div></div>
-    <div class="kpi-card"><div class="kpi-label">Avg. Position</div><div class="loading-shimmer" id="kpi-position"></div></div>
+    <div class="kpi-card" id="kpi-clicks"><div class="kpi-label">Total Clicks</div><div class="loading-shimmer"></div></div>
+    <div class="kpi-card" id="kpi-impressions"><div class="kpi-label">Impressions</div><div class="loading-shimmer"></div></div>
+    <div class="kpi-card" id="kpi-ctr"><div class="kpi-label">Avg. CTR</div><div class="loading-shimmer"></div></div>
+    <div class="kpi-card" id="kpi-position"><div class="kpi-label">Avg. Position</div><div class="loading-shimmer"></div></div>
   </div>
 
   <!-- TIME SERIES -->
@@ -487,10 +487,10 @@ function setStatus(state, title, msg) {
 
 // ── Render functions ─────────────────────────────────────────
 function renderKPIs(s) {
-  document.getElementById('kpi-clicks').outerHTML      = `<div class="kpi-value">${fmt(s.clicks)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">last ${currentDays} days</div>`;
-  document.getElementById('kpi-impressions').outerHTML = `<div class="kpi-value">${fmt(s.impressions)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">search impressions</div>`;
-  document.getElementById('kpi-ctr').outerHTML         = `<div class="kpi-value">${s.ctr}%</div><span class="kpi-delta ${s.ctr>2?'up':'down'}">${s.ctr>2?'↑':'↓'} CTR</span><div class="kpi-sub">click-through rate</div>`;
-  document.getElementById('kpi-position').outerHTML    = `<div class="kpi-value">${s.position}</div><span class="kpi-delta ${s.position<20?'up':'down'}">${s.position<20?'↑':'↓'} pos</span><div class="kpi-sub">average position</div>`;
+  document.getElementById('kpi-clicks').innerHTML      = `<div class="kpi-label">Total Clicks</div><div class="kpi-value">${fmt(s.clicks)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">last ${currentDays} days</div>`;
+  document.getElementById('kpi-impressions').innerHTML = `<div class="kpi-label">Impressions</div><div class="kpi-value">${fmt(s.impressions)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">search impressions</div>`;
+  document.getElementById('kpi-ctr').innerHTML         = `<div class="kpi-label">Avg. CTR</div><div class="kpi-value">${s.ctr}%</div><span class="kpi-delta ${s.ctr>2?'up':'down'}">${s.ctr>2?'↑':'↓'} CTR</span><div class="kpi-sub">click-through rate</div>`;
+  document.getElementById('kpi-position').innerHTML    = `<div class="kpi-label">Avg. Position</div><div class="kpi-value">${s.position}</div><span class="kpi-delta ${s.position<20?'up':'down'}">${s.position<20?'↑':'↓'} pos</span><div class="kpi-sub">average position</div>`;
 }
 
 function renderTimeSeries(rows) {
