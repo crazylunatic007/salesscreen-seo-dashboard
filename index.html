@@ -641,7 +641,7 @@ async function loadGSC() {
   setStatus('','Fetching Search Console data…','Loading last '+currentDays+' days');
   try {
     const url = GSC_API_URL + '?days=' + currentDays;
-    const res  = await fetch(url);
+    const res  = await fetch(url, { redirect: 'follow' });
     const data = await res.json();
     if(data.error) throw new Error(data.error);
 
