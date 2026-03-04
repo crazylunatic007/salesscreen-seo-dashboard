@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalesScreen — SEO Intelligence Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00e5a0;
+    --accent2: #ff6b35;
+    --accent3: #5b8fff;
+    --text: #f0f2f7;
+    --muted: #6b7280;
+    --muted2: #9ca3af;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background mesh */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(0,229,160,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 90% 80%, rgba(91,143,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 60px;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 36px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo-mark {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent), #00b87a);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 18px;
+    color: #000;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  .header-title h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+
+  .header-title p {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    margin-top: 2px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .data-source-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--muted2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .data-source-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .last-updated {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* KPI GRID */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    animation: fadeUp 0.5s both;
+  }
+
+  .kpi-card:hover {
+    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-2px);
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+    opacity: 0.6;
+  }
+
+  .kpi-card:nth-child(1) { --card-accent: var(--accent); animation-delay: 0.05s; }
+  .kpi-card:nth-child(2) { --card-accent: var(--accent3); animation-delay: 0.1s; }
+  .kpi-card:nth-child(3) { --card-accent: var(--accent2); animation-delay: 0.15s; }
+  .kpi-card:nth-child(4) { --card-accent: #d4a0ff; animation-delay: 0.2s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .kpi-label {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .kpi-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+  }
+
+  .kpi-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  .kpi-delta.up {
+    background: rgba(0,229,160,0.12);
+    color: var(--accent);
+  }
+
+  .kpi-delta.down {
+    background: rgba(255,107,53,0.12);
+    color: var(--accent2);
+  }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* CHART GRID */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .chart-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    animation: fadeUp 0.5s both;
+    transition: border-color 0.3s;
+  }
+
+  .card:hover {
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.2px;
+  }
+
+  .card-subtitle {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .chart-container {
+    position: relative;
+  }
+
+  /* TABLE */
+  .table-wrapper {
+    overflow: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 0 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s;
+  }
+
+  tbody tr:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  tbody td {
+    padding: 12px 0;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  tbody td.mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* POSITION BADGE */
+  .pos-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .pos-1 { background: rgba(0,229,160,0.15); color: var(--accent); }
+  .pos-2 { background: rgba(91,143,255,0.15); color: var(--accent3); }
+  .pos-3 { background: rgba(212,160,255,0.15); color: #d4a0ff; }
+  .pos-other { background: rgba(255,255,255,0.06); color: var(--muted2); }
+
+  /* DIFFICULTY BAR */
+  .diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .diff-track {
+    width: 60px;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .diff-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+  }
+
+  /* AI VISIBILITY SECTION */
+  .ai-section {
+    margin-bottom: 40px;
+  }
+
+  .ai-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .ai-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s 0.3s both;
+  }
+
+  .ai-card::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,160,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .ai-score-display {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin: 20px 0;
+  }
+
+  .ai-score-ring {
+    position: relative;
+    width: 100px; height: 100px;
+    flex-shrink: 0;
+  }
+
+  .ai-score-ring svg {
+    transform: rotate(-90deg);
+  }
+
+  .ai-score-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-score-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .ai-score-label {
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .ai-score-meta {
+    flex: 1;
+  }
+
+  .ai-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+
+  .ai-stat-row:last-child { border-bottom: none; }
+
+  .ai-stat-key {
+    color: var(--muted2);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+
+  .ai-stat-val {
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+
+  .ai-stat-val.green { color: var(--accent); }
+  .ai-stat-val.blue { color: var(--accent3); }
+
+  /* SERP FEATURES LIST */
+  .serp-feature-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .serp-feature-row:last-child { border-bottom: none; }
+
+  .serp-feature-name {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .serp-feature-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    padding: 2px 10px;
+    background: rgba(0,229,160,0.1);
+    border-radius: 100px;
+  }
+
+  /* TREND INDICATOR */
+  .trend-spark {
+    display: inline-flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 20px;
+    vertical-align: middle;
+  }
+
+  .trend-bar {
+    width: 3px;
+    border-radius: 1px;
+    background: var(--muted);
+    transition: height 0.3s;
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .source-tags {
+    display: flex;
+    gap: 8px;
+  }
+
+  .source-tag {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--muted);
+  }
+
+  /* TOOLTIP */
+  .chip {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.06);
+    color: var(--muted2);
+    letter-spacing: 0.5px;
+  }
+
+  .chip.green { background: rgba(0,229,160,0.12); color: var(--accent); }
+  .chip.blue { background: rgba(91,143,255,0.12); color: var(--accent3); }
+  .chip.orange { background: rgba(255,107,53,0.12); color: var(--accent2); }
+
+  .gsc-note {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s 0.1s both;
+  }
+
+  .gsc-note-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(91,143,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .gsc-note-text {
+    flex: 1;
+  }
+
+  .gsc-note-text strong {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .gsc-note-text p {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .connect-btn {
+    background: var(--accent3);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+
+  .connect-btn:hover { opacity: 0.85; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="logo-mark">SS</div>
+      <div class="header-title">
+        <h1>SEO Intelligence Dashboard</h1>
+        <p>salesscreen.com · Executive View</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="data-source-badge">
+        <span class="dot"></span>
+        Live · Semrush API
+      </div>
+      <div class="last-updated">Updated Mar 2026</div>
+    </div>
+  </header>
+
+  <!-- GSC CONNECT NOTICE -->
+  <div class="gsc-note">
+    <div class="gsc-note-icon">🔗</div>
+    <div class="gsc-note-text">
+      <strong>Connect Google Search Console for live Impressions, CTR & Query data</strong>
+      <p>This dashboard is pre-built. Once connected, all GSC charts will populate with real-time data from salesscreen.com</p>
+    </div>
+    <button class="connect-btn">Connect GSC →</button>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="section-label">Organic Performance Overview</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Organic Keywords</div>
+      <div class="kpi-value">1,534</div>
+      <span class="kpi-delta up">↑ 38% MoM</span>
+      <div class="kpi-sub">vs 1,107 last month</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Est. Monthly Traffic</div>
+      <div class="kpi-value">2,276</div>
+      <span class="kpi-delta down">↓ 16% MoM</span>
+      <div class="kpi-sub">from Semrush estimates</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Traffic Cost Value</div>
+      <div class="kpi-value">$15.7K</div>
+      <span class="kpi-delta up">↑ organic value</span>
+      <div class="kpi-sub">equivalent PPC spend</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Domain Rank (US)</div>
+      <div class="kpi-value">588K</div>
+      <span class="kpi-delta up">↑ improving</span>
+      <div class="kpi-sub">Global Semrush rank</div>
+    </div>
+  </div>
+
+  <!-- TRAFFIC TREND + KWs -->
+  <div class="chart-grid" style="margin-bottom:16px; animation: fadeUp 0.5s 0.25s both;">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Organic Traffic Trend</div>
+          <div class="card-subtitle">Monthly estimated visits · Last 12 months</div>
+        </div>
+        <span class="chip green">Semrush</span>
+      </div>
+      <div class="chart-container" style="height:220px;">
+        <canvas id="trafficChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Keyword Growth</div>
+          <div class="card-subtitle">Total ranking keywords over time</div>
+        </div>
+        <span class="chip blue">Semrush</span>
+      </div>
+      <div class="chart-container" style="height:220px;">
+        <canvas id="kwChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE SEARCH CONSOLE PLACEHOLDER ROW -->
+  <div class="section-label" style="margin-top: 32px;">Google Search Console · Awaiting Connection</div>
+  <div class="grid-2" style="animation: fadeUp 0.5s 0.3s both;">
+    <div class="card" style="opacity:0.6;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Impressions & Clicks</div>
+          <div class="card-subtitle">From Google Search Console</div>
+        </div>
+        <span class="chip">Connect GSC</span>
+      </div>
+      <div style="height:200px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
+        <div style="font-size:32px;">📊</div>
+        <p style="font-size:13px; color:var(--muted); font-family:'DM Mono',monospace; text-align:center;">Connect Google Search Console<br>to unlock Impressions, CTR & Clicks</p>
+      </div>
+    </div>
+    <div class="card" style="opacity:0.6;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Top Queries by CTR</div>
+          <div class="card-subtitle">From Google Search Console</div>
+        </div>
+        <span class="chip">Connect GSC</span>
+      </div>
+      <div style="height:200px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
+        <div style="font-size:32px;">🔍</div>
+        <p style="font-size:13px; color:var(--muted); font-family:'DM Mono',monospace; text-align:center;">Real query data, average position<br>& CTR will appear here</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI VISIBILITY SECTION -->
+  <div class="section-label">AI & SERP Feature Visibility</div>
+  <div class="ai-section">
+    <div class="ai-grid">
+      <div class="ai-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">AI Overview & SERP Feature Presence</div>
+            <div class="card-subtitle">Keywords appearing in SERP features · Semrush data</div>
+          </div>
+          <span class="chip green">Live</span>
+        </div>
+        <div class="ai-score-display">
+          <div class="ai-score-ring">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="url(#scoreGrad)" stroke-width="8"
+                stroke-dasharray="263.9" stroke-dashoffset="66" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#00e5a0"/>
+                  <stop offset="100%" stop-color="#5b8fff"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="ai-score-text">
+              <div class="ai-score-num">75%</div>
+              <div class="ai-score-label">visible</div>
+            </div>
+          </div>
+          <div class="ai-score-meta">
+            <div class="ai-stat-row">
+              <span class="ai-stat-key">SERP Feature KWs</span>
+              <span class="ai-stat-val green">20</span>
+            </div>
+            <div class="ai-stat-row">
+              <span class="ai-stat-key">Top Positions (P1)</span>
+              <span class="ai-stat-val green">19 / 20</span>
+            </div>
+            <div class="ai-stat-row">
+              <span class="ai-stat-key">Avg. Search Volume</span>
+              <span class="ai-stat-val blue">449</span>
+            </div>
+            <div class="ai-stat-row">
+              <span class="ai-stat-key">Feature Traffic Est.</span>
+              <span class="ai-stat-val green">~38%</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-title" style="font-size:12px; color:var(--muted); margin-bottom: 12px; font-family:'DM Mono',monospace;">TOP SERP FEATURE KEYWORDS</div>
+        <div>
+          <div class="serp-feature-row">
+            <span class="serp-feature-name">how to motivate a sales team</span>
+            <span class="serp-feature-count">1,300 vol</span>
+          </div>
+          <div class="serp-feature-row">
+            <span class="serp-feature-name">funny work gif / work gifs</span>
+            <span class="serp-feature-count">1,000+ vol</span>
+          </div>
+          <div class="serp-feature-row">
+            <span class="serp-feature-name">sales gamification</span>
+            <span class="serp-feature-count">260 vol</span>
+          </div>
+          <div class="serp-feature-row">
+            <span class="serp-feature-name">sales leaderboard software</span>
+            <span class="serp-feature-count">260 vol</span>
+          </div>
+          <div class="serp-feature-row">
+            <span class="serp-feature-name">it worker gif / workplace gif</span>
+            <span class="serp-feature-count">320 vol</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-card" style="animation-delay: 0.4s;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">AI Visibility Tracker</div>
+            <div class="card-subtitle">Brand mentions in AI answers · via Semrush AI</div>
+          </div>
+          <span class="chip orange">Beta</span>
+        </div>
+
+        <div style="margin: 20px 0;">
+          <div style="font-size:12px; font-family:'DM Mono',monospace; color:var(--muted); margin-bottom:16px; text-transform:uppercase; letter-spacing:1px;">Tracked AI Platforms</div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🤖</div>
+                <div>
+                  <div style="font-size:13px;font-weight:500;">ChatGPT</div>
+                  <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);">gpt-4o</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;">Track →</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">✨</div>
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Gemini</div>
+                  <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);">google.com</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;">Track →</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🔍</div>
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Perplexity</div>
+                  <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);">perplexity.ai</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;">Track →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px; margin-top: 8px;">
+          <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">Recommended Tracking Queries</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <span class="chip">"sales gamification software"</span>
+            <span class="chip">"sales leaderboard tools"</span>
+            <span class="chip">"how to motivate sales team"</span>
+            <span class="chip">"best sales performance software"</span>
+            <span class="chip">"sales contest software"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP KEYWORDS TABLE -->
+  <div class="section-label">Top Organic Keywords</div>
+  <div class="card" style="animation: fadeUp 0.5s 0.4s both; margin-bottom: 40px;">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Ranking Keywords by Traffic Share</div>
+        <div class="card-subtitle">Top 10 keywords · US database · March 2026</div>
+      </div>
+      <span class="chip green">Semrush Live</span>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th>Position</th>
+            <th>Search Vol.</th>
+            <th>Traffic %</th>
+            <th>Difficulty</th>
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody id="keywordTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>salesscreen.com · SEO Dashboard · Generated with Claude + Semrush API</p>
+    <div class="source-tags">
+      <span class="source-tag">Semrush API</span>
+      <span class="source-tag">Google Search Console</span>
+      <span class="source-tag">Semrush AI Toolkit</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // DATA from Semrush API
+  const trafficData = {
+    labels: ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'],
+    traffic: [2288,2731,2577,3030,3762,2133,2574,2165,1916,2674,2711,2425],
+    keywords: [1128,1021,860,911,627,675,721,731,2121,2211,1107,1489]
+  };
+
+  const keywords = [
+    { kw: 'salesscreen', pos: 1, vol: 590, tr: 20.73, kd: 45, trend: [0.36,0.45,0.45,0.55,0.45,0.45,0.36,0.30,0.45,0.55,0.55,0.67] },
+    { kw: 'sales screen', pos: 1, vol: 140, tr: 4.92, kd: 50, trend: [0.08,0.08,0.23,0.11,0.18,0.08,0.54,0.28,0.08,0.08,0.66,0.54] },
+    { kw: 'salesscreen login', pos: 1, vol: 110, tr: 3.86, kd: 10, trend: [0.34,0.81,0.34,0.43,0.43,0.28,0.21,0.34,0.34,0.28,0.21,0.15] },
+    { kw: 'sales gamification', pos: 1, vol: 260, tr: 2.81, kd: 19, trend: [0.66,0.66,0.53,0.53,0.53,0.66,0.82,0.66,1.00,1.00,0.43,1.00] },
+    { kw: 'sales gamification software', pos: 2, vol: 390, tr: 2.24, kd: 11, trend: [0.23,0.29,0.29,0.36,0.36,0.44,0.44,0.81,0.81,0.66,1.00,1.00] },
+    { kw: 'sales leaderboard software', pos: 4, vol: 260, tr: 0.70, kd: 14, trend: [0.11,0.18,0.23,0.35,0.35,0.44,0.35,0.66,0.66,0.35,0.66,1.00] },
+    { kw: 'sales gamification tools', pos: 2, vol: 110, tr: 0.61, kd: 16, trend: [0.15,0.15,0.07,0.15,0.42,0.42,0.07,0.80,0.65,0.80,1.00,1.00] },
+    { kw: 'gamify sales', pos: 2, vol: 170, tr: 0.57, kd: 16, trend: [1.00,0.53,1.00,0.53,0.53,1.00,0.65,0.65,0.21,0.21,0.21,0.15] },
+    { kw: 'gamified sales training', pos: 1, vol: 70, tr: 0.74, kd: 9, trend: [0.09,0.14,0.52,0.52,0.52,0.14,0.09,0.33,0.42,0.52,0.42,0.42] },
+    { kw: 'salescreen', pos: 1, vol: 110, tr: 3.86, kd: 31, trend: [0.82,0.12,0.17,0.17,0.23,0.12,0.17,0.17,0.28,0.23,1.00,0.28] },
+  ];
+
+  // Build keyword table
+  const tbody = document.getElementById('keywordTableBody');
+  keywords.forEach(k => {
+    const maxTrend = Math.max(...k.trend);
+    const trendBars = k.trend.slice(-6).map(v => {
+      const h = Math.max(4, Math.round((v / maxTrend) * 18));
+      return `<div class="trend-bar" style="height:${h}px;background:${v > 0.6 ? 'var(--accent)' : 'rgba(255,255,255,0.2)'}"></div>`;
+    }).join('');
+
+    const posClass = k.pos === 1 ? 'pos-1' : k.pos === 2 ? 'pos-2' : k.pos === 3 ? 'pos-3' : 'pos-other';
+    const kdColor = k.kd < 20 ? 'var(--accent)' : k.kd < 40 ? 'var(--accent3)' : 'var(--accent2)';
+
+    tbody.innerHTML += `
+      <tr>
+        <td style="font-weight:500; max-width:220px;">${k.kw}</td>
+        <td><span class="pos-badge ${posClass}">${k.pos}</span></td>
+        <td class="mono">${k.vol.toLocaleString()}</td>
+        <td class="mono" style="color:var(--accent)">${k.tr.toFixed(2)}%</td>
+        <td>
+          <div class="diff-bar">
+            <div class="diff-track"><div class="diff-fill" style="width:${k.kd}%;background:${kdColor}"></div></div>
+            <span class="mono" style="color:${kdColor}">${k.kd}</span>
+          </div>
+        </td>
+        <td><div class="trend-spark">${trendBars}</div></td>
+      </tr>
+    `;
+  });
+
+  // Chart defaults
+  Chart.defaults.color = '#6b7280';
+  Chart.defaults.font.family = "'DM Mono', monospace";
+  Chart.defaults.font.size = 11;
+
+  const gridColor = 'rgba(255,255,255,0.04)';
+
+  // Traffic Chart
+  const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+  const trafficGrad = trafficCtx.createLinearGradient(0, 0, 0, 220);
+  trafficGrad.addColorStop(0, 'rgba(0,229,160,0.25)');
+  trafficGrad.addColorStop(1, 'rgba(0,229,160,0.01)');
+
+  new Chart(trafficCtx, {
+    type: 'line',
+    data: {
+      labels: trafficData.labels,
+      datasets: [{
+        data: trafficData.traffic,
+        borderColor: '#00e5a0',
+        borderWidth: 2,
+        backgroundColor: trafficGrad,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: '#00e5a0',
+        pointBorderColor: '#0a0c10',
+        pointBorderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#181c24', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#f0f2f7', bodyColor: '#9ca3af', padding: 10 } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: '#6b7280' } },
+        y: { grid: { color: gridColor }, ticks: { color: '#6b7280' } }
+      }
+    }
+  });
+
+  // Keywords Chart
+  const kwCtx = document.getElementById('kwChart').getContext('2d');
+  const kwGrad = kwCtx.createLinearGradient(0, 0, 0, 220);
+  kwGrad.addColorStop(0, 'rgba(91,143,255,0.25)');
+  kwGrad.addColorStop(1, 'rgba(91,143,255,0.01)');
+
+  new Chart(kwCtx, {
+    type: 'bar',
+    data: {
+      labels: trafficData.labels,
+      datasets: [{
+        data: trafficData.keywords,
+        backgroundColor: trafficData.keywords.map((v,i) => i === 11 ? '#5b8fff' : 'rgba(91,143,255,0.3)'),
+        borderRadius: 4,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#181c24', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, titleColor: '#f0f2f7', bodyColor: '#9ca3af', padding: 10 } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: '#6b7280' } },
+        y: { grid: { color: gridColor }, ticks: { color: '#6b7280' } }
+      }
+    }
+  });
+</script>
+</body>
+</html>
