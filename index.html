@@ -9,205 +9,141 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #0a0c10;
-    --surface: #111318;
-    --surface2: #181c24;
-    --border: rgba(255,255,255,0.07);
-    --accent: #00e5a0;
-    --accent2: #ff6b35;
-    --accent3: #5b8fff;
-    --text: #f0f2f7;
-    --muted: #6b7280;
-    --muted2: #9ca3af;
+    --bg:#0a0c10;--surface:#111318;--surface2:#181c24;--border:rgba(255,255,255,0.07);
+    --accent:#00e5a0;--accent2:#ff6b35;--accent3:#5b8fff;--text:#f0f2f7;--muted:#6b7280;--muted2:#9ca3af;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Outfit', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background:
-      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(0,229,160,0.04) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 90% 80%, rgba(91,143,255,0.04) 0%, transparent 60%);
-    pointer-events: none; z-index: 0;
-  }
-  .wrapper { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 32px 60px; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+    background:radial-gradient(ellipse 60% 40% at 10% 20%,rgba(0,229,160,0.04) 0%,transparent 60%),
+               radial-gradient(ellipse 50% 40% at 90% 80%,rgba(91,143,255,0.04) 0%,transparent 60%);
+    pointer-events:none;z-index:0;}
+  .wrapper{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:0 32px 60px;}
 
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 36px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 40px;
-  }
-  .header-left { display: flex; align-items: center; gap: 20px; }
-  .logo-mark {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--accent), #00b87a);
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    font-family: 'DM Mono', monospace; font-weight: 500; font-size: 18px;
-    color: #000; letter-spacing: -1px; flex-shrink: 0;
-  }
-  .header-title h1 { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; }
-  .header-title p { font-size: 13px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
-  .header-right { display: flex; align-items: center; gap: 12px; }
-  .data-source-badge {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 16px; border: 1px solid var(--border); border-radius: 100px;
-    font-size: 12px; color: var(--muted2); font-family: 'DM Mono', monospace;
-  }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .last-updated { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  header{display:flex;align-items:center;justify-content:space-between;padding:36px 0 32px;border-bottom:1px solid var(--border);margin-bottom:32px;}
+  .header-left{display:flex;align-items:center;gap:20px;}
+  .logo-mark{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#00b87a);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-weight:500;font-size:18px;color:#000;letter-spacing:-1px;}
+  .header-title h1{font-family:'DM Serif Display',serif;font-size:22px;font-weight:400;}
+  .header-title p{font-size:13px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;}
+  .header-right{display:flex;align-items:center;gap:10px;}
+  .live-badge{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:100px;font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
-  .section-label {
-    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
-    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-  }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  /* ── TOOLBAR ── */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:28px;flex-wrap:wrap;}
+  .date-btn{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--muted2);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:all 0.2s;}
+  .date-btn:hover,.date-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,0.08);}
+  .toolbar-sep{width:1px;height:24px;background:var(--border);}
+  .regex-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:260px;}
+  .regex-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;transition:border-color 0.2s;}
+  .regex-input:focus{border-color:var(--accent3);}
+  .regex-input::placeholder{color:var(--muted);}
+  .regex-status{font-size:11px;font-family:'DM Mono',monospace;padding:4px 10px;border-radius:6px;}
+  .regex-status.ok{background:rgba(0,229,160,0.1);color:var(--accent);}
+  .regex-status.err{background:rgba(255,107,53,0.1);color:var(--accent2);}
+  .regex-status.off{background:rgba(255,255,255,0.05);color:var(--muted);}
+  .apply-btn{padding:8px 16px;background:var(--accent3);border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:opacity 0.2s;}
+  .apply-btn:hover{opacity:0.85;}
 
-  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
-  .kpi-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-    padding: 24px; position: relative; overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s;
-    animation: fadeUp 0.5s both;
-  }
-  .kpi-card:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-2px); }
-  .kpi-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
-    opacity: 0.6;
-  }
+  .section-label{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+  .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s;animation:fadeUp 0.5s both;}
+  .kpi-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px);}
+  .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--card-accent,var(--accent)),transparent);opacity:0.6;}
   .kpi-card:nth-child(1){--card-accent:var(--accent);animation-delay:.05s}
   .kpi-card:nth-child(2){--card-accent:var(--accent3);animation-delay:.1s}
   .kpi-card:nth-child(3){--card-accent:var(--accent2);animation-delay:.15s}
   .kpi-card:nth-child(4){--card-accent:#d4a0ff;animation-delay:.2s}
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .kpi-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:0.5px;margin-bottom:10px;text-transform:uppercase;}
+  .kpi-value{font-family:'DM Serif Display',serif;font-size:36px;color:var(--text);line-height:1;margin-bottom:8px;letter-spacing:-1px;}
+  .kpi-delta{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-family:'DM Mono',monospace;padding:3px 10px;border-radius:100px;}
+  .kpi-delta.up{background:rgba(0,229,160,0.12);color:var(--accent);}
+  .kpi-delta.down{background:rgba(255,107,53,0.12);color:var(--accent2);}
+  .kpi-sub{font-size:11px;color:var(--muted);margin-top:6px;font-family:'DM Mono',monospace;}
 
-  .kpi-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase; }
-  .kpi-value { font-family: 'DM Serif Display', serif; font-size: 38px; color: var(--text); line-height: 1; margin-bottom: 10px; letter-spacing: -1px; }
-  .kpi-delta {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 12px; font-family: 'DM Mono', monospace; padding: 3px 10px; border-radius: 100px;
-  }
-  .kpi-delta.up { background: rgba(0,229,160,0.12); color: var(--accent); }
-  .kpi-delta.down { background: rgba(255,107,53,0.12); color: var(--accent2); }
-  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 8px; font-family: 'DM Mono', monospace; }
+  .chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:28px;}
 
-  .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;animation:fadeUp 0.5s both;transition:border-color 0.3s;}
+  .card:hover{border-color:rgba(255,255,255,0.12);}
+  .card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+  .card-title{font-size:14px;font-weight:500;color:var(--text);}
+  .card-subtitle{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-top:4px;}
 
-  .card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-    padding: 28px; animation: fadeUp 0.5s both; transition: border-color 0.3s;
-  }
-  .card:hover { border-color: rgba(255,255,255,0.12); }
-  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
-  .card-title { font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: -0.2px; }
-  .card-subtitle { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); margin-top: 4px; }
+  .chip{font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--muted2);letter-spacing:0.5px;}
+  .chip.green{background:rgba(0,229,160,0.12);color:var(--accent);}
+  .chip.blue{background:rgba(91,143,255,0.12);color:var(--accent3);}
+  .chip.orange{background:rgba(255,107,53,0.12);color:var(--accent2);}
+  .chip.live{background:rgba(0,229,160,0.12);color:var(--accent);animation:pulse 2s infinite;}
 
-  .chip {
-    font-size: 10px; font-family: 'DM Mono', monospace; padding: 2px 8px;
-    border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--muted2); letter-spacing: 0.5px;
-  }
-  .chip.green { background: rgba(0,229,160,0.12); color: var(--accent); }
-  .chip.blue { background: rgba(91,143,255,0.12); color: var(--accent3); }
-  .chip.orange { background: rgba(255,107,53,0.12); color: var(--accent2); }
-  .chip.live { background: rgba(0,229,160,0.12); color: var(--accent); animation: pulse 2s infinite; }
+  .loading-shimmer{background:linear-gradient(90deg,var(--surface2) 25%,rgba(255,255,255,0.04) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:36px;}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-  /* Loading state */
-  .loading-shimmer {
-    background: linear-gradient(90deg, var(--surface2) 25%, rgba(255,255,255,0.04) 50%, var(--surface2) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 8px;
-    height: 38px;
-  }
-  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .gsc-status-bar{display:flex;align-items:center;gap:14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 20px;margin-bottom:28px;animation:fadeUp 0.4s both;}
+  .gsc-status-bar.connected{border-color:rgba(0,229,160,0.3);}
+  .gsc-status-bar.error{border-color:rgba(255,107,53,0.3);}
+  #gscStatusTitle{font-size:13px;font-weight:500;display:block;margin-bottom:2px;}
+  #gscStatusMsg{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
 
-  .gsc-status-bar {
-    display: flex; align-items: center; gap: 14px;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 20px; margin-bottom: 40px;
-    animation: fadeUp 0.4s both;
-  }
-  .gsc-status-icon { font-size: 20px; }
-  .gsc-status-text strong { font-size: 13px; font-weight: 500; display: block; margin-bottom: 2px; }
-  .gsc-status-text p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  #gscStatusBar.connected { border-color: rgba(0,229,160,0.3); }
-  #gscStatusBar.error { border-color: rgba(255,107,53,0.3); }
+  table{width:100%;border-collapse:collapse;}
+  thead th{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:0 0 12px;text-align:left;border-bottom:1px solid var(--border);}
+  tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s;}
+  tbody tr:hover{background:rgba(255,255,255,0.02);}
+  tbody tr:last-child{border-bottom:none;}
+  tbody td{padding:10px 0;font-size:13px;color:var(--text);}
+  tbody td.mono{font-family:'DM Mono',monospace;font-size:12px;}
 
-  /* Table */
-  table { width: 100%; border-collapse: collapse; }
-  thead th {
-    font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
-    letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
-    padding: 0 0 14px; text-align: left; border-bottom: 1px solid var(--border);
-  }
-  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
-  tbody tr:hover { background: rgba(255,255,255,0.02); }
-  tbody tr:last-child { border-bottom: none; }
-  tbody td { padding: 11px 0; font-size: 13px; color: var(--text); }
-  tbody td.mono { font-family: 'DM Mono', monospace; font-size: 12px; }
-
-  .pos-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 8px;
-    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
-  }
+  .pos-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;}
   .pos-1{background:rgba(0,229,160,0.15);color:var(--accent)}
   .pos-2{background:rgba(91,143,255,0.15);color:var(--accent3)}
   .pos-3{background:rgba(212,160,255,0.15);color:#d4a0ff}
   .pos-other{background:rgba(255,255,255,0.06);color:var(--muted2)}
 
-  .ctr-bar { width: 60px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 100px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 6px; }
-  .ctr-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--accent3), var(--accent)); }
+  .ctr-bar{width:50px;height:4px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:5px;}
+  .ctr-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent3),var(--accent));}
 
-  /* AI section */
-  .ai-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-    padding: 28px; position: relative; overflow: hidden; animation: fadeUp 0.5s 0.3s both;
-  }
-  .ai-score-ring { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
-  .ai-score-ring svg { transform: rotate(-90deg); }
-  .ai-score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
-  .ai-score-num { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; color: var(--accent); }
-  .ai-score-label { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-  .ai-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
-  .ai-stat-row:last-child { border-bottom: none; }
-  .ai-stat-key { color: var(--muted2); font-family: 'DM Mono', monospace; font-size: 11px; }
-  .ai-stat-val { font-weight: 500; font-family: 'DM Mono', monospace; font-size: 13px; }
-  .ai-stat-val.green { color: var(--accent); }
-  .ai-stat-val.blue { color: var(--accent3); }
+  /* ── COMPETITOR TABLE ── */
+  .comp-bar{width:100px;height:6px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:6px;}
+  .comp-fill{height:100%;border-radius:100px;}
+  .you-row td{background:rgba(0,229,160,0.04);}
+  .you-badge{font-size:10px;font-family:'DM Mono',monospace;padding:2px 6px;border-radius:4px;background:rgba(0,229,160,0.15);color:var(--accent);margin-left:6px;}
 
-  /* Device pills */
-  .device-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .device-label { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--muted2); width: 80px; text-transform: capitalize; }
-  .device-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
-  .device-fill { height: 100%; border-radius: 100px; }
-  .device-val { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text); width: 40px; text-align: right; }
+  .device-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .device-label{font-size:12px;font-family:'DM Mono',monospace;color:var(--muted2);width:80px;text-transform:capitalize;}
+  .device-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden;}
+  .device-fill{height:100%;border-radius:100px;}
+  .device-val{font-size:12px;font-family:'DM Mono',monospace;width:36px;text-align:right;}
 
-  footer {
-    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  footer p { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .source-tags { display: flex; gap: 8px; }
-  .source-tag { font-size: 11px; font-family: 'DM Mono', monospace; padding: 4px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--muted); }
+  .ai-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;animation:fadeUp 0.5s 0.3s both;}
+  .ai-score-ring{position:relative;width:90px;height:90px;flex-shrink:0;}
+  .ai-score-ring svg{transform:rotate(-90deg);}
+  .ai-score-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+  .ai-score-num{font-family:'DM Serif Display',serif;font-size:24px;line-height:1;color:var(--accent);}
+  .ai-score-label{font-size:9px;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+  .ai-stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .ai-stat-row:last-child{border-bottom:none;}
+  .ai-stat-key{color:var(--muted2);font-family:'DM Mono',monospace;font-size:11px;}
+  .ai-stat-val{font-weight:500;font-family:'DM Mono',monospace;font-size:13px;}
+  .ai-stat-val.green{color:var(--accent);}
+  .ai-stat-val.blue{color:var(--accent3);}
 
-  .trend-spark { display: inline-flex; gap: 2px; align-items: flex-end; height: 20px; vertical-align: middle; }
-  .trend-bar { width: 3px; border-radius: 1px; }
+  footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  footer p{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .source-tags{display:flex;gap:8px;}
+  .source-tag{font-size:11px;font-family:'DM Mono',monospace;padding:4px 12px;border:1px solid var(--border);border-radius:100px;color:var(--muted);}
+
+  #queriesFiltered{font-size:11px;font-family:'DM Mono',monospace;color:var(--accent2);margin-top:6px;display:none;}
 </style>
 </head>
 <body>
 <div class="wrapper">
 
+  <!-- HEADER -->
   <header>
     <div class="header-left">
       <div class="logo-mark">SS</div>
@@ -217,24 +153,45 @@
       </div>
     </div>
     <div class="header-right">
-      <div class="data-source-badge"><span class="dot"></span>Live · GSC + Semrush</div>
-      <div class="last-updated" id="lastUpdated">Fetching data…</div>
+      <div class="live-badge"><span class="dot"></span>Live · GSC + Semrush</div>
+      <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;" id="lastUpdated">Fetching…</div>
     </div>
   </header>
 
-  <!-- GSC STATUS BAR -->
-  <div class="gsc-status-bar" id="gscStatusBar">
-    <div class="gsc-status-icon" id="gscStatusIcon">⏳</div>
-    <div class="gsc-status-text">
-      <strong id="gscStatusTitle">Connecting to Google Search Console…</strong>
-      <p id="gscStatusMsg">Fetching live data from your GSC API endpoint</p>
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <!-- Date range -->
+    <button class="date-btn" onclick="setRange(7)">7D</button>
+    <button class="date-btn" onclick="setRange(28)">28D</button>
+    <button class="date-btn active" onclick="setRange(90)">90D</button>
+    <button class="date-btn" onclick="setRange(180)">180D</button>
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Regex filter -->
+    <div class="regex-wrap">
+      <span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);white-space:nowrap;">Filter queries:</span>
+      <input class="regex-input" id="regexInput" type="text" placeholder="e.g. ^(?!.*salesscreen).*  to remove branded" spellcheck="false"/>
+      <span class="regex-status off" id="regexStatus">off</span>
+      <button class="apply-btn" onclick="applyRegex()">Apply</button>
+      <button class="apply-btn" style="background:var(--surface);border:1px solid var(--border);color:var(--muted2);" onclick="clearRegex()">Clear</button>
     </div>
-    <span class="chip" id="gscStatusChip">Loading</span>
+  </div>
+  <div id="queriesFiltered"></div>
+
+  <!-- GSC STATUS -->
+  <div class="gsc-status-bar" id="gscStatusBar">
+    <div style="font-size:20px;" id="gscStatusIcon">⏳</div>
+    <div>
+      <strong id="gscStatusTitle">Connecting to Google Search Console…</strong>
+      <p id="gscStatusMsg">Fetching live data</p>
+    </div>
+    <span class="chip" id="gscStatusChip" style="margin-left:auto;">Loading</span>
   </div>
 
   <!-- GSC KPIs -->
-  <div class="section-label">Google Search Console · Last 90 Days</div>
-  <div class="kpi-grid" id="gscKpiGrid">
+  <div class="section-label">Google Search Console · <span id="rangeLabel">Last 90 Days</span></div>
+  <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Total Clicks</div><div class="loading-shimmer" id="kpi-clicks"></div></div>
     <div class="kpi-card"><div class="kpi-label">Impressions</div><div class="loading-shimmer" id="kpi-impressions"></div></div>
     <div class="kpi-card"><div class="kpi-label">Avg. CTR</div><div class="loading-shimmer" id="kpi-ctr"></div></div>
@@ -242,20 +199,20 @@
   </div>
 
   <!-- TIME SERIES -->
-  <div class="chart-grid" style="margin-bottom:40px; animation: fadeUp 0.5s 0.2s both;">
+  <div class="chart-grid" style="margin-bottom:28px;animation:fadeUp 0.5s 0.2s both;">
     <div class="card">
       <div class="card-header">
-        <div><div class="card-title">Clicks & Impressions Over Time</div><div class="card-subtitle">Daily · Last 90 days · Google Search Console</div></div>
+        <div><div class="card-title">Clicks & Impressions</div><div class="card-subtitle">Daily · Google Search Console</div></div>
         <span class="chip live">GSC Live</span>
       </div>
-      <div style="height:220px;"><canvas id="timeSeriesChart"></canvas></div>
+      <div style="height:200px;"><canvas id="timeSeriesChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-header">
         <div><div class="card-title">CTR Trend</div><div class="card-subtitle">Click-through rate over time</div></div>
         <span class="chip live">GSC Live</span>
       </div>
-      <div style="height:220px;"><canvas id="ctrChart"></canvas></div>
+      <div style="height:200px;"><canvas id="ctrChart"></canvas></div>
     </div>
   </div>
 
@@ -263,7 +220,7 @@
   <div class="grid-2">
     <div class="card" style="animation-delay:0.25s">
       <div class="card-header">
-        <div><div class="card-title">Top Queries</div><div class="card-subtitle">By clicks · Last 90 days</div></div>
+        <div><div class="card-title">Top Queries</div><div class="card-subtitle" id="queriesSubtitle">By clicks · regex filter active when set</div></div>
         <span class="chip live">GSC Live</span>
       </div>
       <table>
@@ -284,10 +241,10 @@
   </div>
 
   <!-- DEVICES + COUNTRIES -->
-  <div class="grid-2" style="margin-top: -24px;">
+  <div class="grid-2" style="margin-top:-12px;">
     <div class="card" style="animation-delay:0.35s">
       <div class="card-header">
-        <div><div class="card-title">Clicks by Device</div><div class="card-subtitle">Desktop vs Mobile vs Tablet</div></div>
+        <div><div class="card-title">Clicks by Device</div><div class="card-subtitle">Desktop · Mobile · Tablet</div></div>
         <span class="chip live">GSC Live</span>
       </div>
       <div id="devicesChart" style="padding-top:8px;"></div>
@@ -297,12 +254,26 @@
         <div><div class="card-title">Top Countries</div><div class="card-subtitle">By impressions</div></div>
         <span class="chip live">GSC Live</span>
       </div>
-      <div style="height:180px;"><canvas id="countriesChart"></canvas></div>
+      <div style="height:170px;"><canvas id="countriesChart"></canvas></div>
     </div>
   </div>
 
-  <!-- SEMRUSH SECTION -->
-  <div class="section-label" style="margin-top:40px;">Semrush Organic Intelligence</div>
+  <!-- COMPETITOR COMPARISON -->
+  <div class="section-label" style="margin-top:40px;">Competitor Comparison · Semrush US Database</div>
+  <div class="card" style="margin-bottom:28px;animation-delay:0.4s;">
+    <div class="card-header">
+      <div><div class="card-title">Organic Visibility vs Competitors</div><div class="card-subtitle">Keywords · Traffic · Traffic Cost Value</div></div>
+      <span class="chip green">Semrush Live</span>
+    </div>
+    <div style="height:220px;margin-bottom:24px;"><canvas id="compChart"></canvas></div>
+    <table>
+      <thead><tr><th>Domain</th><th>Organic Keywords</th><th>Est. Traffic</th><th>Traffic Value</th><th>vs SalesScreen</th></tr></thead>
+      <tbody id="compTable"></tbody>
+    </table>
+  </div>
+
+  <!-- SEMRUSH KPIs -->
+  <div class="section-label">Semrush Organic Intelligence</div>
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-label">Organic Keywords</div>
@@ -331,20 +302,20 @@
   </div>
 
   <!-- SEMRUSH CHARTS -->
-  <div class="chart-grid" style="margin-bottom:40px; animation: fadeUp 0.5s 0.45s both;">
+  <div class="chart-grid" style="margin-bottom:28px;animation:fadeUp 0.5s 0.45s both;">
     <div class="card">
       <div class="card-header">
         <div><div class="card-title">Organic Traffic Trend</div><div class="card-subtitle">Monthly estimated visits · Last 12 months</div></div>
         <span class="chip green">Semrush</span>
       </div>
-      <div style="height:220px;"><canvas id="semrushTrafficChart"></canvas></div>
+      <div style="height:200px;"><canvas id="semrushTrafficChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-header">
         <div><div class="card-title">Keyword Growth</div><div class="card-subtitle">Total ranking keywords over time</div></div>
         <span class="chip blue">Semrush</span>
       </div>
-      <div style="height:220px;"><canvas id="semrushKwChart"></canvas></div>
+      <div style="height:200px;"><canvas id="semrushKwChart"></canvas></div>
     </div>
   </div>
 
@@ -356,21 +327,18 @@
         <div><div class="card-title">SERP Feature Presence</div><div class="card-subtitle">Keywords in SERP features · Semrush</div></div>
         <span class="chip green">Live</span>
       </div>
-      <div style="display:flex;align-items:center;gap:32px;margin:20px 0;">
+      <div style="display:flex;align-items:center;gap:28px;margin:16px 0;">
         <div class="ai-score-ring">
-          <svg width="100" height="100" viewBox="0 0 100 100">
+          <svg width="90" height="90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
-            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#sg)" stroke-width="8"
-              stroke-dasharray="263.9" stroke-dashoffset="66" stroke-linecap="round"/>
-            <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#00e5a0"/><stop offset="100%" stop-color="#5b8fff"/>
-            </linearGradient></defs>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#sg)" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="66" stroke-linecap="round"/>
+            <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00e5a0"/><stop offset="100%" stop-color="#5b8fff"/></linearGradient></defs>
           </svg>
           <div class="ai-score-text"><div class="ai-score-num">75%</div><div class="ai-score-label">visible</div></div>
         </div>
         <div style="flex:1;">
           <div class="ai-stat-row"><span class="ai-stat-key">SERP Feature KWs</span><span class="ai-stat-val green">20</span></div>
-          <div class="ai-stat-row"><span class="ai-stat-key">Top Positions (P1)</span><span class="ai-stat-val green">19 / 20</span></div>
+          <div class="ai-stat-row"><span class="ai-stat-key">Top Positions (P1)</span><span class="ai-stat-val green">19/20</span></div>
           <div class="ai-stat-row"><span class="ai-stat-key">Avg. Search Volume</span><span class="ai-stat-val blue">449</span></div>
           <div class="ai-stat-row"><span class="ai-stat-key">Feature Traffic Est.</span><span class="ai-stat-val green">~38%</span></div>
         </div>
@@ -381,31 +349,22 @@
         <div><div class="card-title">AI Visibility Tracker</div><div class="card-subtitle">Brand mentions in AI answers · Semrush AI</div></div>
         <span class="chip orange">Beta</span>
       </div>
-      <div style="margin:16px 0;display:flex;flex-direction:column;gap:12px;">
+      <div style="margin:12px 0;display:flex;flex-direction:column;gap:10px;">
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🤖</div>
-            <div><div style="font-size:13px;font-weight:500;">ChatGPT</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">gpt-4o</div></div>
-          </div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:15px;">🤖</div><div><div style="font-size:13px;font-weight:500;">ChatGPT</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">gpt-4o</div></div></div>
           <span class="chip">Track →</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">✨</div>
-            <div><div style="font-size:13px;font-weight:500;">Gemini</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">google.com</div></div>
-          </div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:15px;">✨</div><div><div style="font-size:13px;font-weight:500;">Gemini</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">google.com</div></div></div>
           <span class="chip">Track →</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;">🔍</div>
-            <div><div style="font-size:13px;font-weight:500;">Perplexity</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">perplexity.ai</div></div>
-          </div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:15px;">🔍</div><div><div style="font-size:13px;font-weight:500;">Perplexity</div><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)">perplexity.ai</div></div></div>
           <span class="chip">Track →</span>
         </div>
       </div>
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;">
-        <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Recommended Queries</div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:8px;">
+        <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Recommended Queries</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
           <span class="chip">"sales gamification software"</span>
           <span class="chip">"sales leaderboard tools"</span>
@@ -428,7 +387,7 @@
 
 <script>
 // ============================================================
-// ⚙️  CONFIGURATION — paste your Apps Script URL here
+// ⚙️  PASTE YOUR APPS SCRIPT URL HERE
 // ============================================================
 const GSC_API_URL = "https://script.google.com/macros/s/AKfycby8jfm02VyWCvnPks9WLrbGAwjn5lb64ATbP_4SkyWomFajxw1CZYIiK-jkqxyogpsO/exec";
 // ============================================================
@@ -438,135 +397,159 @@ Chart.defaults.font.family = "'DM Mono', monospace";
 Chart.defaults.font.size = 11;
 const grid = 'rgba(255,255,255,0.04)';
 
+// ── State ────────────────────────────────────────────────────
+let currentDays    = 90;
+let allQueries     = [];
+let currentRegex   = null;
+let timeChart      = null;
+let ctrChartInst   = null;
+let countriesChart = null;
+
 // ── Semrush static data ──────────────────────────────────────
-const semrushData = {
+const semrush = {
   labels:   ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'],
   traffic:  [2288,2731,2577,3030,3762,2133,2574,2165,1916,2674,2711,2425],
   keywords: [1128,1021,860,911,627,675,721,731,2121,2211,1107,1489]
 };
 
-function makeGrad(ctx, h, c1, c2) {
-  const g = ctx.createLinearGradient(0,0,0,h);
-  g.addColorStop(0, c1); g.addColorStop(1, c2); return g;
+const competitors = [
+  { domain:'salesscreen.com', keywords:1534, traffic:2276,  cost:15689, you:true  },
+  { domain:'spinify.com',     keywords:4139, traffic:2776,  cost:13266, you:false },
+  { domain:'ambition.com',    keywords:1745, traffic:3315,  cost:8172,  you:false },
+  { domain:'leaderboarded.com',keywords:1821,traffic:2703,  cost:4676,  you:false },
+  { domain:'leveleleven.com', keywords:586,  traffic:184,   cost:1023,  you:false },
+  { domain:'hoopla.com',      keywords:133,  traffic:1,     cost:0,     you:false },
+];
+
+// ── Helpers ──────────────────────────────────────────────────
+function fmt(n){
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=1000)    return (n/1000).toFixed(1)+'K';
+  return n ? n.toLocaleString() : '0';
+}
+function fmtMoney(n){
+  if(n>=1000) return '$'+(n/1000).toFixed(1)+'K';
+  return '$'+n;
+}
+function makeGrad(ctx,h,c1,c2){
+  const g=ctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,c1);g.addColorStop(1,c2);return g;
 }
 
-// Semrush traffic chart
-(function(){
-  const ctx = document.getElementById('semrushTrafficChart').getContext('2d');
-  new Chart(ctx, { type:'line', data:{ labels:semrushData.labels, datasets:[{
-    data:semrushData.traffic, borderColor:'#00e5a0', borderWidth:2,
-    backgroundColor:makeGrad(ctx,220,'rgba(0,229,160,0.25)','rgba(0,229,160,0.01)'),
-    fill:true, tension:0.4, pointRadius:3, pointBackgroundColor:'#00e5a0',
-    pointBorderColor:'#0a0c10', pointBorderWidth:2
-  }]}, options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
-    scales:{x:{grid:{color:grid}},y:{grid:{color:grid}}}}});
-})();
+// ── Date range ───────────────────────────────────────────────
+function setRange(days) {
+  currentDays = days;
+  document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('rangeLabel').textContent = 'Last '+days+' Days';
+  loadGSC();
+}
 
-// Semrush keyword chart
-(function(){
-  const ctx = document.getElementById('semrushKwChart').getContext('2d');
-  new Chart(ctx, { type:'bar', data:{ labels:semrushData.labels, datasets:[{
-    data:semrushData.keywords,
-    backgroundColor:semrushData.keywords.map((_,i)=>i===11?'#5b8fff':'rgba(91,143,255,0.3)'),
-    borderRadius:4, borderSkipped:false
-  }]}, options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
-    scales:{x:{grid:{color:grid}},y:{grid:{color:grid}}}}});
-})();
+// ── Regex filter ─────────────────────────────────────────────
+function applyRegex() {
+  const val = document.getElementById('regexInput').value.trim();
+  const status = document.getElementById('regexStatus');
+  const info   = document.getElementById('queriesFiltered');
+  if (!val) { clearRegex(); return; }
+  try {
+    currentRegex = new RegExp(val, 'i');
+    status.textContent = '✓ valid';
+    status.className = 'regex-status ok';
+    renderQueries(allQueries);
+  } catch(e) {
+    currentRegex = null;
+    status.textContent = '✗ invalid';
+    status.className = 'regex-status err';
+    info.style.display = 'none';
+  }
+}
 
-// ── GSC Live data ────────────────────────────────────────────
-let timeSeriesChart = null;
-let ctrChartInst    = null;
-let countriesChart  = null;
+function clearRegex() {
+  currentRegex = null;
+  document.getElementById('regexInput').value = '';
+  document.getElementById('regexStatus').textContent = 'off';
+  document.getElementById('regexStatus').className = 'regex-status off';
+  document.getElementById('queriesFiltered').style.display = 'none';
+  renderQueries(allQueries);
+}
 
+// ── GSC status ───────────────────────────────────────────────
 function setStatus(state, title, msg) {
-  const bar   = document.getElementById('gscStatusBar');
-  const icon  = document.getElementById('gscStatusIcon');
-  const t     = document.getElementById('gscStatusTitle');
-  const m     = document.getElementById('gscStatusMsg');
-  const chip  = document.getElementById('gscStatusChip');
+  const bar  = document.getElementById('gscStatusBar');
   bar.className = 'gsc-status-bar ' + state;
-  icon.textContent  = state==='connected' ? '✅' : state==='error' ? '❌' : '⏳';
-  t.textContent     = title;
-  m.textContent     = msg;
-  chip.textContent  = state==='connected' ? 'Live' : state==='error' ? 'Error' : 'Loading';
-  chip.className    = 'chip ' + (state==='connected'?'green':state==='error'?'orange':'');
+  document.getElementById('gscStatusIcon').textContent  = state==='connected'?'✅':state==='error'?'❌':'⏳';
+  document.getElementById('gscStatusTitle').textContent = title;
+  document.getElementById('gscStatusMsg').textContent   = msg;
+  const chip = document.getElementById('gscStatusChip');
+  chip.textContent  = state==='connected'?'Live':state==='error'?'Error':'Loading';
+  chip.className    = 'chip '+(state==='connected'?'green':state==='error'?'orange':'');
 }
 
-function fmt(n) {
-  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
-  if (n >= 1000)    return (n/1000).toFixed(1)+'K';
-  return n.toLocaleString();
-}
-
-function renderKPI(id, value, delta, sub) {
-  const el = document.getElementById(id);
-  el.outerHTML = `<div class="kpi-value">${value}</div>
-    <span class="kpi-delta ${delta.startsWith('↑')?'up':'down'}">${delta}</span>
-    <div class="kpi-sub">${sub}</div>`;
+// ── Render functions ─────────────────────────────────────────
+function renderKPIs(s) {
+  document.getElementById('kpi-clicks').outerHTML      = `<div class="kpi-value">${fmt(s.clicks)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">last ${currentDays} days</div>`;
+  document.getElementById('kpi-impressions').outerHTML = `<div class="kpi-value">${fmt(s.impressions)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">search impressions</div>`;
+  document.getElementById('kpi-ctr').outerHTML         = `<div class="kpi-value">${s.ctr}%</div><span class="kpi-delta ${s.ctr>2?'up':'down'}">${s.ctr>2?'↑':'↓'} CTR</span><div class="kpi-sub">click-through rate</div>`;
+  document.getElementById('kpi-position').outerHTML    = `<div class="kpi-value">${s.position}</div><span class="kpi-delta ${s.position<20?'up':'down'}">${s.position<20?'↑':'↓'} pos</span><div class="kpi-sub">average position</div>`;
 }
 
 function renderTimeSeries(rows) {
-  // Group by week to reduce noise
-  const labels = rows.filter((_,i)=>i%7===0).map(r=>r.date.slice(5));
-  const clicks  = rows.filter((_,i)=>i%7===0).map(r=>r.clicks);
-  const impr    = rows.filter((_,i)=>i%7===0).map(r=>r.impressions);
-
-  const ctx = document.getElementById('timeSeriesChart').getContext('2d');
-  if (timeSeriesChart) timeSeriesChart.destroy();
-  timeSeriesChart = new Chart(ctx, { type:'line', data:{ labels, datasets:[
-    { label:'Clicks', data:clicks, borderColor:'#00e5a0', borderWidth:2,
-      backgroundColor:'rgba(0,229,160,0.1)', fill:true, tension:0.4,
-      pointRadius:0, yAxisID:'y' },
-    { label:'Impressions', data:impr, borderColor:'#5b8fff', borderWidth:2,
-      backgroundColor:'rgba(91,143,255,0.05)', fill:true, tension:0.4,
-      pointRadius:0, yAxisID:'y1' }
-  ]}, options:{ responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{ display:true, labels:{ color:'#9ca3af', boxWidth:12, padding:16 }},
-      tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
-    scales:{
-      x:{ grid:{color:grid} },
-      y:{ grid:{color:grid}, position:'left' },
-      y1:{ grid:{display:false}, position:'right' }
-    }}});
+  const step   = Math.max(1, Math.floor(rows.length / 30));
+  const labels = rows.filter((_,i)=>i%step===0).map(r=>r.date.slice(5));
+  const clicks = rows.filter((_,i)=>i%step===0).map(r=>r.clicks);
+  const impr   = rows.filter((_,i)=>i%step===0).map(r=>r.impressions);
+  const ctx    = document.getElementById('timeSeriesChart').getContext('2d');
+  if(timeChart) timeChart.destroy();
+  timeChart = new Chart(ctx,{type:'line',data:{labels,datasets:[
+    {label:'Clicks',data:clicks,borderColor:'#00e5a0',borderWidth:2,backgroundColor:'rgba(0,229,160,0.1)',fill:true,tension:0.4,pointRadius:0,yAxisID:'y'},
+    {label:'Impressions',data:impr,borderColor:'#5b8fff',borderWidth:2,backgroundColor:'rgba(91,143,255,0.05)',fill:true,tension:0.4,pointRadius:0,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{color:'#9ca3af',boxWidth:10,padding:14}},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
+    scales:{x:{grid:{color:grid}},y:{grid:{color:grid},position:'left'},y1:{grid:{display:false},position:'right'}}}});
 }
 
 function renderCTR(rows) {
-  const labels = rows.filter((_,i)=>i%7===0).map(r=>r.date.slice(5));
-  const ctr    = rows.filter((_,i)=>i%7===0).map(r=>r.ctr);
+  const step   = Math.max(1, Math.floor(rows.length / 30));
+  const labels = rows.filter((_,i)=>i%step===0).map(r=>r.date.slice(5));
+  const ctr    = rows.filter((_,i)=>i%step===0).map(r=>r.ctr);
   const ctx    = document.getElementById('ctrChart').getContext('2d');
-  if (ctrChartInst) ctrChartInst.destroy();
-  const grad = ctx.createLinearGradient(0,0,0,220);
-  grad.addColorStop(0,'rgba(255,107,53,0.2)'); grad.addColorStop(1,'rgba(255,107,53,0.01)');
-  ctrChartInst = new Chart(ctx, { type:'line', data:{ labels, datasets:[{
-    label:'CTR %', data:ctr, borderColor:'#ff6b35', borderWidth:2,
-    backgroundColor:grad, fill:true, tension:0.4, pointRadius:0
-  }]}, options:{ responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,callbacks:{label:v=>v.raw+'%'}}},
-    scales:{ x:{grid:{color:grid}}, y:{grid:{color:grid},ticks:{callback:v=>v+'%'}}}}});
+  if(ctrChartInst) ctrChartInst.destroy();
+  const grad = ctx.createLinearGradient(0,0,0,200);
+  grad.addColorStop(0,'rgba(255,107,53,0.2)');grad.addColorStop(1,'rgba(255,107,53,0.01)');
+  ctrChartInst = new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'CTR %',data:ctr,borderColor:'#ff6b35',borderWidth:2,backgroundColor:grad,fill:true,tension:0.4,pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,callbacks:{label:v=>v.raw+'%'}}},
+      scales:{x:{grid:{color:grid}},y:{grid:{color:grid},ticks:{callback:v=>v+'%'}}}}});
 }
 
 function renderQueries(rows) {
+  allQueries = rows;
+  let filtered = rows;
+  const info = document.getElementById('queriesFiltered');
+  if (currentRegex) {
+    filtered = rows.filter(r => currentRegex.test(r.query));
+    const removed = rows.length - filtered.length;
+    info.style.display = 'block';
+    info.textContent = `⚡ Regex active — ${removed} queries filtered out, showing ${filtered.length} of ${rows.length}`;
+  } else {
+    info.style.display = 'none';
+  }
   const tb = document.getElementById('queriesTable');
-  tb.innerHTML = rows.slice(0,8).map(r => {
+  if (!filtered.length) { tb.innerHTML='<tr><td colspan="4" style="color:var(--muted);font-family:\'DM Mono\',monospace;font-size:12px;padding:16px 0;">No queries match filter</td></tr>'; return; }
+  tb.innerHTML = filtered.slice(0,10).map(r=>{
     const pos = Math.round(r.position);
-    const pc = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
+    const pc  = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
     return `<tr>
       <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.query}</td>
       <td class="mono" style="color:var(--accent)">${r.clicks}</td>
-      <td class="mono">
-        <div class="ctr-bar"><div class="ctr-fill" style="width:${Math.min(r.ctr*5,100)}%"></div></div>
-        ${r.ctr}%
-      </td>
+      <td class="mono"><div class="ctr-bar"><div class="ctr-fill" style="width:${Math.min(r.ctr*5,100)}%"></div></div>${r.ctr}%</td>
       <td><span class="pos-badge ${pc}">${pos}</span></td>
     </tr>`;
   }).join('');
 }
 
 function renderPages(rows) {
-  const tb = document.getElementById('pagesTable');
-  tb.innerHTML = rows.slice(0,8).map(r => `<tr>
+  document.getElementById('pagesTable').innerHTML = rows.slice(0,8).map(r=>`<tr>
     <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2)">${r.page}</td>
     <td class="mono" style="color:var(--accent)">${r.clicks}</td>
     <td class="mono">${fmt(r.impressions)}</td>
@@ -575,9 +558,9 @@ function renderPages(rows) {
 }
 
 function renderDevices(rows) {
-  const total  = rows.reduce((s,r)=>s+r.clicks,0)||1;
-  const colors = { desktop:'#5b8fff', mobile:'#00e5a0', tablet:'#ff6b35' };
-  document.getElementById('devicesChart').innerHTML = rows.map(r => `
+  const total = rows.reduce((s,r)=>s+r.clicks,0)||1;
+  const colors = {desktop:'#5b8fff',mobile:'#00e5a0',tablet:'#ff6b35'};
+  document.getElementById('devicesChart').innerHTML = rows.map(r=>`
     <div class="device-row">
       <span class="device-label">${r.device}</span>
       <div class="device-track"><div class="device-fill" style="width:${(r.clicks/total*100).toFixed(0)}%;background:${colors[r.device.toLowerCase()]||'#9ca3af'}"></div></div>
@@ -587,62 +570,98 @@ function renderDevices(rows) {
 
 function renderCountries(rows) {
   const ctx = document.getElementById('countriesChart').getContext('2d');
-  if (countriesChart) countriesChart.destroy();
-  countriesChart = new Chart(ctx, { type:'doughnut',
-    data:{ labels:rows.map(r=>r.country), datasets:[{
-      data:rows.map(r=>r.impressions),
-      backgroundColor:['#00e5a0','#5b8fff','#ff6b35','#d4a0ff','#fbbf24'],
-      borderWidth:0, hoverOffset:4
-    }]},
-    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
-      plugins:{ legend:{ position:'right', labels:{ color:'#9ca3af', boxWidth:10, padding:12 }},
-        tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}}}});
+  if(countriesChart) countriesChart.destroy();
+  countriesChart = new Chart(ctx,{type:'doughnut',data:{labels:rows.map(r=>r.country),datasets:[{
+    data:rows.map(r=>r.impressions),
+    backgroundColor:['#00e5a0','#5b8fff','#ff6b35','#d4a0ff','#fbbf24'],
+    borderWidth:0,hoverOffset:4
+  }]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+    plugins:{legend:{position:'right',labels:{color:'#9ca3af',boxWidth:10,padding:10}},
+      tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}}}});
 }
 
-// ── Fetch GSC data ───────────────────────────────────────────
+// ── Competitor chart & table ─────────────────────────────────
+function renderCompetitors() {
+  const maxKw = Math.max(...competitors.map(c=>c.keywords));
+  const maxTr = Math.max(...competitors.map(c=>c.traffic));
+
+  // Bar chart
+  const ctx = document.getElementById('compChart').getContext('2d');
+  new Chart(ctx,{type:'bar',data:{
+    labels: competitors.map(c=>c.domain.replace('.com','')),
+    datasets:[
+      {label:'Keywords',data:competitors.map(c=>c.keywords),backgroundColor:competitors.map(c=>c.you?'rgba(0,229,160,0.7)':'rgba(91,143,255,0.4)'),borderRadius:4,borderSkipped:false,yAxisID:'y'},
+      {label:'Traffic',data:competitors.map(c=>c.traffic),backgroundColor:competitors.map(c=>c.you?'rgba(0,229,160,0.3)':'rgba(91,143,255,0.2)'),borderRadius:4,borderSkipped:false,yAxisID:'y1'}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{color:'#9ca3af',boxWidth:10,padding:14}},
+      tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},
+    scales:{x:{grid:{color:grid}},y:{grid:{color:grid},position:'left'},y1:{grid:{display:false},position:'right'}}}});
+
+  // Table
+  const ss = competitors.find(c=>c.you);
+  document.getElementById('compTable').innerHTML = competitors.map(c=>{
+    const kwPct = (c.keywords/maxKw*100).toFixed(0);
+    const diff  = c.you ? '—' : (c.traffic > ss.traffic
+      ? `<span style="color:var(--accent2)">↑ ${fmt(c.traffic-ss.traffic)} more</span>`
+      : `<span style="color:var(--accent)">↓ ${fmt(ss.traffic-c.traffic)} less</span>`);
+    const color = c.you ? '#00e5a0' : '#5b8fff';
+    return `<tr class="${c.you?'you-row':''}">
+      <td style="font-weight:500">${c.domain}${c.you?'<span class="you-badge">YOU</span>':''}</td>
+      <td><div class="comp-bar"><div class="comp-fill" style="width:${kwPct}%;background:${color}"></div></div><span class="mono">${fmt(c.keywords)}</span></td>
+      <td class="mono" style="color:${color}">${fmt(c.traffic)}</td>
+      <td class="mono">${fmtMoney(c.cost)}</td>
+      <td>${diff}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Semrush charts ───────────────────────────────────────────
+(function(){
+  const ctx = document.getElementById('semrushTrafficChart').getContext('2d');
+  new Chart(ctx,{type:'line',data:{labels:semrush.labels,datasets:[{data:semrush.traffic,borderColor:'#00e5a0',borderWidth:2,backgroundColor:makeGrad(ctx,200,'rgba(0,229,160,0.25)','rgba(0,229,160,0.01)'),fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#00e5a0',pointBorderColor:'#0a0c10',pointBorderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},scales:{x:{grid:{color:grid}},y:{grid:{color:grid}}}}});
+})();
+(function(){
+  const ctx = document.getElementById('semrushKwChart').getContext('2d');
+  new Chart(ctx,{type:'bar',data:{labels:semrush.labels,datasets:[{data:semrush.keywords,backgroundColor:semrush.keywords.map((_,i)=>i===11?'#5b8fff':'rgba(91,143,255,0.3)'),borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c24',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10}},scales:{x:{grid:{color:grid}},y:{grid:{color:grid}}}}});
+})();
+
+// ── Fetch GSC ────────────────────────────────────────────────
 async function loadGSC() {
-  if (!GSC_API_URL || GSC_API_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
-    setStatus('error',
-      'Apps Script URL not configured',
-      'Open index.html and paste your Web App URL into GSC_API_URL at the top of the script');
+  if(!GSC_API_URL || GSC_API_URL==='YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'){
+    setStatus('error','Apps Script URL not configured','Paste your Web App URL into GSC_API_URL');
     return;
   }
-
+  setStatus('','Fetching Search Console data…','Loading last '+currentDays+' days');
   try {
-    setStatus('', 'Connecting to Google Search Console…', 'Fetching live data from your GSC API endpoint');
-    const res  = await fetch(GSC_API_URL);
+    const url = GSC_API_URL + '?days=' + currentDays;
+    const res  = await fetch(url);
     const data = await res.json();
+    if(data.error) throw new Error(data.error);
 
-    if (data.error) throw new Error(data.error);
-
-    // Update last updated
     document.getElementById('lastUpdated').textContent =
-      'Updated ' + new Date(data.lastUpdated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      'Updated '+new Date(data.lastUpdated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    setStatus('connected','Google Search Console connected','Live · salesscreen.com · Last '+currentDays+' days');
 
-    // Status
-    setStatus('connected', 'Google Search Console connected', 'Showing live data for salesscreen.com · Last 90 days');
-
-    // KPIs
-    const s = data.summary;
-    document.getElementById('kpi-clicks').outerHTML      = `<div class="kpi-value">${fmt(s.clicks)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">last 90 days</div>`;
-    document.getElementById('kpi-impressions').outerHTML = `<div class="kpi-value">${fmt(s.impressions)}</div><span class="kpi-delta up">↑ Live</span><div class="kpi-sub">search impressions</div>`;
-    document.getElementById('kpi-ctr').outerHTML         = `<div class="kpi-value">${s.ctr}%</div><span class="kpi-delta ${s.ctr>2?'up':'down'}">${s.ctr>2?'↑':'↓'} avg CTR</span><div class="kpi-sub">click-through rate</div>`;
-    document.getElementById('kpi-position').outerHTML    = `<div class="kpi-value">${s.position}</div><span class="kpi-delta ${s.position<20?'up':'down'}">${s.position<20?'↑':'↓'} avg pos</span><div class="kpi-sub">average position</div>`;
-
-    // Charts & tables
-    if (data.timeSeries?.length)  renderTimeSeries(data.timeSeries);
-    if (data.timeSeries?.length)  renderCTR(data.timeSeries);
-    if (data.queries?.length)     renderQueries(data.queries);
-    if (data.pages?.length)       renderPages(data.pages);
-    if (data.devices?.length)     renderDevices(data.devices);
-    if (data.countries?.length)   renderCountries(data.countries);
-
+    renderKPIs(data.summary);
+    if(data.timeSeries?.length){ renderTimeSeries(data.timeSeries); renderCTR(data.timeSeries); }
+    if(data.queries?.length)    renderQueries(data.queries);
+    if(data.pages?.length)      renderPages(data.pages);
+    if(data.devices?.length)    renderDevices(data.devices);
+    if(data.countries?.length)  renderCountries(data.countries);
   } catch(e) {
-    setStatus('error', 'Could not load GSC data', e.message);
+    setStatus('error','Could not load GSC data',e.message);
   }
 }
 
+// ── Init ─────────────────────────────────────────────────────
+renderCompetitors();
 loadGSC();
+
+// Allow pressing Enter in regex box
+document.getElementById('regexInput').addEventListener('keydown', e => { if(e.key==='Enter') applyRegex(); });
 </script>
 </body>
 </html>
