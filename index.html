@@ -65,6 +65,25 @@
   .kpi-delta.down{background:rgba(255,107,53,0.12);color:var(--accent2);}
   .kpi-sub{font-size:11px;color:var(--muted);margin-top:6px;font-family:'DM Mono',monospace;}
 
+  /* ── COMPARISON ── */
+  .period-bar{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 16px;margin-bottom:28px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+  .period-tag{padding:3px 10px;border-radius:6px;font-size:11px;font-family:'DM Mono',monospace;}
+  .period-tag.current{background:rgba(0,229,160,0.12);color:var(--accent);}
+  .period-tag.previous{background:rgba(91,143,255,0.12);color:var(--accent3);}
+  .comp-kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px;}
+  .comp-kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;animation:fadeUp 0.5s both;}
+  .comp-kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--card-accent,var(--accent)),transparent);opacity:0.5;}
+  .comp-kpi-card{position:relative;overflow:hidden;}
+  .comp-metric{font-family:'DM Serif Display',serif;font-size:28px;line-height:1;margin:8px 0 4px;letter-spacing:-0.5px;}
+  .comp-prev{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:6px;}
+  .comp-change{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:100px;}
+  .comp-change.up{background:rgba(0,229,160,0.12);color:var(--accent);}
+  .comp-change.down{background:rgba(255,107,53,0.12);color:var(--accent2);}
+  .comp-change.neutral{background:rgba(255,255,255,0.06);color:var(--muted2);}
+  .query-comp-table tbody td.better{color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;}
+  .query-comp-table tbody td.worse{color:var(--accent2);font-family:'DM Mono',monospace;font-size:11px;}
+  .query-comp-table tbody td.neutral{color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;}
+
   .chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;}
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
   .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:28px;}
@@ -187,6 +206,62 @@
       <p id="gscStatusMsg">Fetching live data</p>
     </div>
     <span class="chip" id="gscStatusChip" style="margin-left:auto;">Loading</span>
+  </div>
+
+  <!-- PERIOD COMPARISON BAR -->
+  <div class="period-bar" id="periodBar" style="display:none;">
+    <span>Comparing:</span>
+    <span class="period-tag current" id="currentPeriodTag">—</span>
+    <span style="color:var(--border)">vs</span>
+    <span class="period-tag previous" id="previousPeriodTag">—</span>
+    <span style="margin-left:auto;font-size:10px;opacity:0.6;">↑↓ change shown on each metric</span>
+  </div>
+
+  <!-- COMPARISON KPI ROW -->
+  <div class="section-label" id="compSectionLabel" style="display:none;">Period vs Period Comparison</div>
+  <div class="comp-kpi-grid" id="compKpiGrid" style="display:none;">
+    <div class="comp-kpi-card" style="--card-accent:var(--accent);animation-delay:0.05s">
+      <div class="kpi-label">Clicks</div>
+      <div class="comp-metric" id="comp-clicks">—</div>
+      <div class="comp-prev" id="comp-clicks-prev">prev —</div>
+      <span class="comp-change neutral" id="comp-clicks-delta">—</span>
+    </div>
+    <div class="comp-kpi-card" style="--card-accent:var(--accent3);animation-delay:0.1s">
+      <div class="kpi-label">Impressions</div>
+      <div class="comp-metric" id="comp-impressions">—</div>
+      <div class="comp-prev" id="comp-impressions-prev">prev —</div>
+      <span class="comp-change neutral" id="comp-impressions-delta">—</span>
+    </div>
+    <div class="comp-kpi-card" style="--card-accent:var(--accent2);animation-delay:0.15s">
+      <div class="kpi-label">CTR</div>
+      <div class="comp-metric" id="comp-ctr">—</div>
+      <div class="comp-prev" id="comp-ctr-prev">prev —</div>
+      <span class="comp-change neutral" id="comp-ctr-delta">—</span>
+    </div>
+    <div class="comp-kpi-card" style="--card-accent:#d4a0ff;animation-delay:0.2s">
+      <div class="kpi-label">Avg Position</div>
+      <div class="comp-metric" id="comp-position">—</div>
+      <div class="comp-prev" id="comp-position-prev">prev —</div>
+      <span class="comp-change neutral" id="comp-position-delta">—</span>
+    </div>
+    <div class="comp-kpi-card" style="--card-accent:#fbbf24;animation-delay:0.25s">
+      <div class="kpi-label">Avg CTR Change</div>
+      <div class="comp-metric" id="comp-ctr-abs">—</div>
+      <div class="comp-prev" id="comp-ctr-abs-prev">prev —</div>
+      <span class="comp-change neutral" id="comp-ctr-abs-delta">—</span>
+    </div>
+  </div>
+
+  <!-- QUERY COMPARISON TABLE -->
+  <div class="card query-comp-table" id="queryCompCard" style="display:none;margin-bottom:28px;animation-delay:0.3s;">
+    <div class="card-header">
+      <div><div class="card-title">Query Performance: Period vs Period</div><div class="card-subtitle" id="queryCompSubtitle">Top queries — change in clicks & position</div></div>
+      <span class="chip live">GSC Live</span>
+    </div>
+    <table>
+      <thead><tr><th>Query</th><th>Clicks (now)</th><th>Clicks (prev)</th><th>Δ Clicks</th><th>Pos (now)</th><th>Pos (prev)</th><th>Δ Pos</th><th>CTR (now)</th></tr></thead>
+      <tbody id="queryCompTable"></tbody>
+    </table>
   </div>
 
   <!-- GSC KPIs -->
@@ -473,6 +548,108 @@ function clearRegex() {
   renderQueries(allQueries);
 }
 
+// ── Comparison rendering ─────────────────────────────────────
+function pctChange(curr, prev) {
+  if (!prev || prev === 0) return null;
+  return ((curr - prev) / prev * 100).toFixed(1);
+}
+
+function deltaChip(id, curr, prev, invertGood) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const pct = pctChange(curr, prev);
+  if (pct === null) { el.textContent = '—'; el.className = 'comp-change neutral'; return; }
+  const isGood = invertGood ? parseFloat(pct) < 0 : parseFloat(pct) > 0;
+  const arrow  = parseFloat(pct) > 0 ? '↑' : '↓';
+  el.textContent  = arrow + ' ' + Math.abs(pct) + '%';
+  el.className    = 'comp-change ' + (isGood ? 'up' : 'down');
+}
+
+function renderComparison(data) {
+  const s  = data.summary;
+  const ps = data.prevSummary;
+  const cp = data.currentPeriod;
+  const pp = data.previousPeriod;
+
+  // Show elements
+  document.getElementById('periodBar').style.display        = 'flex';
+  document.getElementById('compSectionLabel').style.display = 'block';
+  document.getElementById('compKpiGrid').style.display      = 'grid';
+  document.getElementById('queryCompCard').style.display    = 'block';
+
+  // Period labels
+  document.getElementById('currentPeriodTag').textContent  = cp.start + ' → ' + cp.end;
+  document.getElementById('previousPeriodTag').textContent = pp.start + ' → ' + pp.end;
+  document.getElementById('queryCompSubtitle').textContent =
+    cp.start + ' vs ' + pp.start + ' · top queries by clicks';
+
+  // Clicks
+  document.getElementById('comp-clicks').textContent      = fmt(s.clicks);
+  document.getElementById('comp-clicks-prev').textContent = 'prev ' + fmt(ps.clicks);
+  deltaChip('comp-clicks-delta', s.clicks, ps.clicks, false);
+
+  // Impressions
+  document.getElementById('comp-impressions').textContent      = fmt(s.impressions);
+  document.getElementById('comp-impressions-prev').textContent = 'prev ' + fmt(ps.impressions);
+  deltaChip('comp-impressions-delta', s.impressions, ps.impressions, false);
+
+  // CTR
+  document.getElementById('comp-ctr').textContent      = s.ctr + '%';
+  document.getElementById('comp-ctr-prev').textContent = 'prev ' + ps.ctr + '%';
+  deltaChip('comp-ctr-delta', s.ctr, ps.ctr, false);
+
+  // Position (lower is better → invertGood = true)
+  document.getElementById('comp-position').textContent      = s.position;
+  document.getElementById('comp-position-prev').textContent = 'prev ' + ps.position;
+  deltaChip('comp-position-delta', s.position, ps.position, true);
+
+  // CTR absolute change
+  const ctrAbs = (s.ctr - ps.ctr).toFixed(2);
+  document.getElementById('comp-ctr-abs').textContent      = (ctrAbs > 0 ? '+' : '') + ctrAbs + '%';
+  document.getElementById('comp-ctr-abs-prev').textContent = 'absolute change';
+  const ctrAbsEl = document.getElementById('comp-ctr-abs-delta');
+  if (ctrAbsEl) {
+    ctrAbsEl.textContent = parseFloat(ctrAbs) >= 0 ? '↑ improving' : '↓ declining';
+    ctrAbsEl.className   = 'comp-change ' + (parseFloat(ctrAbs) >= 0 ? 'up' : 'down');
+  }
+
+  // Query comparison table
+  const curr = data.queries || [];
+  const prev = data.prevQueries || [];
+  const prevMap = {};
+  prev.forEach(r => { prevMap[r.query] = r; });
+
+  const tb = document.getElementById('queryCompTable');
+  if (!tb) return;
+
+  // Merge: all current queries + any prev-only ones
+  const rows = curr.slice(0, 15).map(r => {
+    const p = prevMap[r.query] || { clicks: 0, position: 0, ctr: 0 };
+    const dClicks = r.clicks - p.clicks;
+    const dPos    = p.position ? (r.position - p.position).toFixed(1) : '—';
+    return { query: r.query, clicks: r.clicks, prevClicks: p.clicks,
+             dClicks, position: r.position, prevPos: p.position || '—',
+             dPos, ctr: r.ctr };
+  });
+
+  tb.innerHTML = rows.map(r => {
+    const dClicksClass = r.dClicks > 0 ? 'better' : r.dClicks < 0 ? 'worse' : 'neutral';
+    const dPosClass    = r.dPos !== '—' ? (parseFloat(r.dPos) < 0 ? 'better' : parseFloat(r.dPos) > 0 ? 'worse' : 'neutral') : 'neutral';
+    const dClicksStr   = r.dClicks > 0 ? '↑ +'+r.dClicks : r.dClicks < 0 ? '↓ '+r.dClicks : '—';
+    const dPosStr      = r.dPos !== '—' ? (parseFloat(r.dPos) < 0 ? '↑ '+r.dPos : parseFloat(r.dPos) > 0 ? '↓ +'+r.dPos : '—') : '—';
+    return `<tr>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.query}</td>
+      <td class="mono" style="color:var(--accent)">${r.clicks}</td>
+      <td class="mono" style="color:var(--muted)">${r.prevClicks}</td>
+      <td class="${dClicksClass}">${dClicksStr}</td>
+      <td class="mono">${r.position}</td>
+      <td class="mono" style="color:var(--muted)">${r.prevPos || '—'}</td>
+      <td class="${dPosClass}">${dPosStr}</td>
+      <td class="mono">${r.ctr}%</td>
+    </tr>`;
+  }).join('');
+}
+
 // ── GSC status ───────────────────────────────────────────────
 function setStatus(state, title, msg) {
   const bar  = document.getElementById('gscStatusBar');
@@ -650,6 +827,7 @@ async function loadGSC() {
     setStatus('connected','Google Search Console connected','Live · salesscreen.com · Last '+currentDays+' days');
 
     renderKPIs(data.summary);
+    if(data.prevSummary)        renderComparison(data);
     if(data.timeSeries?.length){ renderTimeSeries(data.timeSeries); renderCTR(data.timeSeries); }
     if(data.queries?.length)    renderQueries(data.queries);
     if(data.pages?.length)      renderPages(data.pages);
