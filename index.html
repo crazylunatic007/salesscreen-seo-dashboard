@@ -566,16 +566,19 @@ function deltaChip(id, curr, prev, invertGood) {
 }
 
 function renderComparison(data) {
-  const s  = data.summary;
-  const ps = data.prevSummary;
-  const cp = data.currentPeriod;
-  const pp = data.previousPeriod;
+  const s  = data.summary  || {};
+  const ps = data.prevSummary || {};
+  const cp = data.currentPeriod  || { start: '—', end: '—' };
+  const pp = data.previousPeriod || { start: '—', end: '—' };
 
-  // Show elements
-  document.getElementById('periodBar').style.display        = 'flex';
-  document.getElementById('compSectionLabel').style.display = 'block';
-  document.getElementById('compKpiGrid').style.display      = 'grid';
-  document.getElementById('queryCompCard').style.display    = 'block';
+  // Always show sections
+  ['periodBar','compSectionLabel','compKpiGrid','queryCompCard'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = id === 'compKpiGrid' ? 'grid' : 'flex';
+      if (id === 'compSectionLabel' || id === 'queryCompCard') el.style.display = 'block';
+    }
+  });
 
   // Period labels
   document.getElementById('currentPeriodTag').textContent  = cp.start + ' → ' + cp.end;
@@ -827,7 +830,7 @@ async function loadGSC() {
     setStatus('connected','Google Search Console connected','Live · salesscreen.com · Last '+currentDays+' days');
 
     renderKPIs(data.summary);
-    if(data.prevSummary)        renderComparison(data);
+    try { renderComparison(data); } catch(compErr) { console.error('Comparison error:', compErr); }
     if(data.timeSeries?.length){ renderTimeSeries(data.timeSeries); renderCTR(data.timeSeries); }
     if(data.queries?.length)    renderQueries(data.queries);
     if(data.pages?.length)      renderPages(data.pages);
